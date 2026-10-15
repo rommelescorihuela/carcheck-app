@@ -45,6 +45,45 @@ export interface Member {
   joined_at: string | null
 }
 
+export type VehicleType = 'car' | 'motorcycle' | 'truck' | 'other'
+
+export type FuelType = 'gasoline' | 'diesel' | 'cng' | 'electric' | 'hybrid'
+
+export interface Vehicle {
+  id: number
+  owner_type: string
+  owner_id: number
+  make: string
+  model: string
+  year: number | null
+  plate: string | null
+  vin: string | null
+  type: VehicleType
+  fuel_type: FuelType
+  odometer_km: number
+  color: string | null
+  notes: string | null
+  photo_url: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Paginated<T> {
+  data: T[]
+  meta: {
+    current_page: number
+    last_page: number
+    per_page: number
+    total: number
+  }
+  links: {
+    first: string | null
+    last: string | null
+    prev: string | null
+    next: string | null
+  }
+}
+
 export class ApiError extends Error {
   status: number
 

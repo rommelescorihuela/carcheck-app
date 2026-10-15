@@ -9,6 +9,8 @@ import NotFound from './pages/NotFound'
 import OrganizationMembers from './pages/OrganizationMembers'
 import Organizations from './pages/Organizations'
 import Register from './pages/Register'
+import VehicleDetail from './pages/VehicleDetail'
+import Vehicles from './pages/Vehicles'
 
 // Las rutas ESTÁTICAS van siempre antes que las de parámetro (`:id`).
 export const routes: RouteObject[] = [
@@ -27,6 +29,8 @@ export const routes: RouteObject[] = [
             children: [
               { path: '/organizaciones', element: <Organizations /> },
               { path: '/organizaciones/:id', element: <OrganizationMembers /> },
+              { path: '/vehiculos', element: <Vehicles /> },
+              { path: '/vehiculos/:id', element: <VehicleDetail /> },
             ],
           },
         ],

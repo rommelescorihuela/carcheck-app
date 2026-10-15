@@ -15,7 +15,7 @@ interface OrganizationState {
 
 export const useOrganizations = create<OrganizationState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       organizations: [],
       activeId: null,
       loading: false,
@@ -43,6 +43,8 @@ export const useOrganizations = create<OrganizationState>()(
           organizations: [...state.organizations, organization],
           activeId: organization.id,
         }))
+        // Recarga para traer el `pivot.role` de la nueva organización.
+        await get().load()
 
         return organization
       },

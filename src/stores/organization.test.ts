@@ -44,6 +44,7 @@ describe('organization store', () => {
 
   it('crea una organización y la deja activa', async () => {
     vi.mocked(api.createOrganization).mockResolvedValueOnce(organization)
+    vi.mocked(api.listOrganizations).mockResolvedValueOnce([organization])
 
     await useOrganizations.getState().create('Taller Central')
 

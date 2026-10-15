@@ -25,6 +25,14 @@ export default function AppShell() {
           >
             Organizaciones
           </NavLink>
+          <NavLink
+            to="/vehiculos"
+            className={({ isActive }) =>
+              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+            }
+          >
+            Vehículos
+          </NavLink>
         </div>
         <div className="flex items-center gap-3 text-sm">
           <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">

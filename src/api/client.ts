@@ -65,7 +65,8 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const { method = 'GET', body, auth = true, retry = true } = options
 
   const headers: Record<string, string> = { Accept: 'application/json' }
-  if (body !== undefined) {
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
+  if (body !== undefined && !isFormData) {
     headers['Content-Type'] = 'application/json'
   }
 
@@ -77,7 +78,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const response = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined ? undefined : isFormData ? (body as FormData) : JSON.stringify(body),
   })
 
   // Ante 401, renovar el token UNA sola vez y reintentar.

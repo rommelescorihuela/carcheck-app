@@ -1,6 +1,16 @@
 import { request } from './client'
 import { clearToken, setToken } from './token'
-import type { AuthResponse, Member, Organization, OrganizationRole, User } from './types'
+import type {
+  AuthResponse,
+  FuelType,
+  Member,
+  Organization,
+  OrganizationRole,
+  Paginated,
+  User,
+  Vehicle,
+  VehicleType,
+} from './types'
 
 export interface RegisterPayload {
   name: string
@@ -102,4 +112,90 @@ export async function acceptInvitation(token: string): Promise<Organization> {
   })
 
   return data.organization
+}
+
+export interface VehiclePayload {
+  make: string
+  model: string
+  year?: number | null
+  plate?: string | null
+  vin?: string | null
+  type?: VehicleType
+  fuel_type?: FuelType
+  odometer_km?: number
+  color?: string | null
+  notes?: string | null
+  organization_id?: number | null
+}
+
+export interface VehicleListParams {
+  organizationId?: number | null
+  scope?: 'personal'
+}
+
+export async function listVehicles(params: VehicleListParams = {}): Promise<Paginated<Vehicle>> {
+  const search = new URLSearchParams()
+  if (params.organizationId != null) {
+    search.set('organization_id', String(params.organizationId))
+  }
+  if (params.scope) {
+    search.set('scope', params.scope)
+  }
+  const query = search.toString()
+
+  return request<Paginated<Vehicle>>(`/vehicles${query ? `?${query}` : ''}`)
+}
+
+export async function getVehicle(id: number): Promise<Vehicle> {
+  const data = await request<{ data: Vehicle }>(`/vehicles/${id}`)
+
+  return data.data
+}
+
+export async function createVehicle(payload: VehiclePayload): Promise<Vehicle> {
+  const data = await request<{ data: Vehicle }>('/vehicles', { method: 'POST', body: payload })
+
+  return data.data
+}
+
+export async function updateVehicle(id: number, payload: VehiclePayload): Promise<Vehicle> {
+  const data = await request<{ data: Vehicle }>(`/vehicles/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function deleteVehicle(id: number): Promise<void> {
+  await request(`/vehicles/${id}`, { method: 'DELETE' })
+}
+
+export async function uploadVehiclePhoto(id: number, file: File): Promise<Vehicle> {
+  const form = new FormData()
+  form.append('photo', file)
+  const data = await request<{ data: Vehicle }>(`/vehicles/${id}/photo`, {
+    method: 'POST',
+    body: form,
+  })
+
+  return data.data
+}
+
+export async function deleteVehiclePhoto(id: number): Promise<Vehicle> {
+  const data = await request<{ data: Vehicle }>(`/vehicles/${id}/photo`, { method: 'DELETE' })
+
+  return data.data
+}
+
+export async function transferVehicle(
+  id: number,
+  payload: { owner_type: 'user' | 'organization'; owner_id: number },
+): Promise<Vehicle> {
+  const data = await request<{ data: Vehicle }>(`/vehicles/${id}/transfer`, {
+    method: 'POST',
+    body: payload,
+  })
+
+  return data.data
 }
