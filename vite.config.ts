@@ -33,6 +33,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
         navigateFallback: '/index.html',
+        // Handlers de `push` y `notificationclick` para las suscripciones push.
+        importScripts: ['push-sw.js'],
       },
       devOptions: {
         enabled: false,

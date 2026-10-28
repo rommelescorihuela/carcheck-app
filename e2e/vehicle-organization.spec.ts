@@ -21,12 +21,13 @@ async function register(page: Page, name: string, email: string): Promise<void> 
 }
 
 test('vehículo de organización: crear, subir foto y traspasar a personal', async ({ page }) => {
-  await register(page, 'Flota E2E', uniqueEmail('flota'))
+  await register(page, 'Dueño de flota', uniqueEmail('flota'))
 
-  // Crear organización (queda activa).
+  // Crear organización (queda activa). Se asserta el radio de la organización: el nombre del
+  // usuario aparece en la cabecera y `getByText` lo confundiría con la organización creada.
   await page.getByPlaceholder('Nombre de la organización').fill('Flota E2E')
   await page.getByRole('button', { name: 'Crear', exact: true }).click()
-  await expect(page.getByText('Flota E2E').first()).toBeVisible()
+  await expect(page.getByRole('radio', { name: /Flota E2E/ })).toBeChecked()
 
   // Crear un vehículo en el ámbito de la organización.
   await page.getByRole('link', { name: 'Vehículos' }).click()

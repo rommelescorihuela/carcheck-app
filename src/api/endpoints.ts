@@ -1,6 +1,7 @@
 import { request } from './client'
 import { clearToken, setToken } from './token'
 import type {
+  AppNotification,
   AuthResponse,
   BillingPayment,
   DocumentsSummary,
@@ -14,9 +15,12 @@ import type {
   MaintenanceType,
   Member,
   Organization,
+  NotificationPreference,
+  NotificationPreferencesData,
   OrganizationRole,
   Paginated,
   Plan,
+  PushSubscriptionPayload,
   Subscription,
   SubscriptionOverview,
   User,
@@ -574,6 +578,86 @@ export async function deletePaymentProof(paymentId: number): Promise<BillingPaym
   const data = await request<{ data: BillingPayment }>(`/billing/payments/${paymentId}/proof`, {
     method: 'DELETE',
   })
+
+  return data.data
+}
+
+export async function listNotifications(): Promise<Paginated<AppNotification>> {
+  return request<Paginated<AppNotification>>('/notifications')
+}
+
+export async function notificationUnreadCount(): Promise<number> {
+  const data = await request<{ data: { count: number } }>('/notifications/unread-count')
+
+  return data.data.count
+}
+
+export async function markNotificationRead(id: string): Promise<AppNotification> {
+  const data = await request<{ data: AppNotification }>(`/notifications/${id}/read`, {
+    method: 'POST',
+  })
+
+  return data.data
+}
+
+export async function markAllNotificationsRead(): Promise<void> {
+  await request('/notifications/read-all', { method: 'POST' })
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+  await request(`/notifications/${id}`, { method: 'DELETE' })
+}
+
+export async function notificationPreferences(): Promise<NotificationPreferencesData> {
+  const data = await request<{ data: NotificationPreferencesData }>('/notifications/preferences')
+
+  return data.data
+}
+
+export async function updateNotificationPreferences(
+  preferences: NotificationPreference[],
+): Promise<NotificationPreferencesData> {
+  const data = await request<{ data: NotificationPreferencesData }>('/notifications/preferences', {
+    method: 'PUT',
+    body: {
+      preferences: preferences.map(({ category, in_app, email, push }) => ({
+        category,
+        in_app,
+        email,
+        push,
+      })),
+    },
+  })
+
+  return data.data
+}
+
+export async function pushPublicKey(): Promise<string | null> {
+  const data = await request<{ data: { public_key: string | null } }>(
+    '/notifications/push/public-key',
+  )
+
+  return data.data.public_key
+}
+
+export async function registerPushSubscription(
+  payload: PushSubscriptionPayload,
+): Promise<void> {
+  await request('/notifications/push-subscriptions', { method: 'POST', body: payload })
+}
+
+export async function removePushSubscription(endpoint: string): Promise<void> {
+  await request('/notifications/push-subscriptions', {
+    method: 'DELETE',
+    body: { endpoint },
+  })
+}
+
+export async function sendTestNotification(): Promise<AppNotification | null> {
+  const data = await request<{ message: string; data: AppNotification | null }>(
+    '/notifications/test',
+    { method: 'POST' },
+  )
 
   return data.data
 }

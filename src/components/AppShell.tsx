@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../stores/auth'
+import { useNotifications } from '../stores/notifications'
 import { useOrganizations } from '../stores/organization'
 
 export default function AppShell() {
@@ -9,6 +11,13 @@ export default function AppShell() {
   const organizations = useOrganizations((state) => state.organizations)
   const activeId = useOrganizations((state) => state.activeId)
   const active = organizations.find((organization) => organization.id === activeId)
+
+  const unreadCount = useNotifications((state) => state.unreadCount)
+  const loadUnreadCount = useNotifications((state) => state.loadUnreadCount)
+
+  useEffect(() => {
+    void loadUnreadCount()
+  }, [loadUnreadCount])
 
   return (
     <div className="min-h-svh bg-slate-50">
@@ -40,6 +49,19 @@ export default function AppShell() {
             }
           >
             Facturación
+          </NavLink>
+          <NavLink
+            to="/notificaciones"
+            className={({ isActive }) =>
+              `flex items-center gap-1 text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+            }
+          >
+            Notificaciones
+            {unreadCount > 0 && (
+              <span className="rounded-full bg-teal-700 px-1.5 py-0.5 text-xs font-medium text-white">
+                {unreadCount}
+              </span>
+            )}
           </NavLink>
         </div>
         <div className="flex items-center gap-3 text-sm">

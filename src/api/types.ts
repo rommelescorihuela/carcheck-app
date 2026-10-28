@@ -299,6 +299,45 @@ export interface BillingPayment {
   created_at: string
 }
 
+
+export type NotificationCategory =
+  | 'system'
+  | 'billing'
+  | 'maintenance'
+  | 'documents'
+  | 'reminders'
+
+export interface AppNotification {
+  id: string
+  category: NotificationCategory
+  category_label: string
+  title: string
+  body: string
+  url: string | null
+  payload: Record<string, unknown>
+  read_at: string | null
+  created_at: string
+}
+
+export interface NotificationPreference {
+  category: NotificationCategory
+  category_label: string
+  in_app: boolean
+  email: boolean
+  push: boolean
+}
+
+export interface NotificationPreferencesData {
+  preferences: NotificationPreference[]
+  push_configured: boolean
+}
+
+export interface PushSubscriptionPayload {
+  endpoint: string
+  keys: { p256dh: string; auth: string }
+  content_encoding: 'aes128gcm' | 'aesgcm'
+}
+
 export class ApiError extends Error {
   status: number
 

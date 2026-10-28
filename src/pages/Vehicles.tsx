@@ -17,6 +17,9 @@ export default function Vehicles() {
   const active = organizations.find((organization) => organization.id === activeId)
   const canCreate =
     activeId === null || active?.pivot?.role === 'owner' || active?.pivot?.role === 'admin'
+  // La organización activa puede venir persistida de una sesión anterior y llegar en la lista
+  // unos milisegundos después: mientras no se conozca su rol no se niega el permiso.
+  const rolePending = activeId !== null && active === undefined
 
   useEffect(() => {
     void loadOrganizations()
@@ -68,6 +71,8 @@ export default function Vehicles() {
         <h2 className="text-lg font-semibold text-slate-800">Agregar vehículo</h2>
         {canCreate ? (
           <VehicleForm submitLabel="Agregar" onSubmit={handleCreate} />
+        ) : rolePending ? (
+          <p className="text-sm text-slate-500">Cargando…</p>
         ) : (
           <p className="text-sm text-slate-500">
             No tienes permiso para agregar vehículos en esta organización.

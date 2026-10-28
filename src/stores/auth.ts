@@ -6,6 +6,7 @@ import { clearToken, getToken } from '../api/token'
 import type { User } from '../api/types'
 import { useOrganizations } from './organization'
 import { useMaintenance } from './maintenance'
+import { useNotifications } from './notifications'
 import { useVehicles } from './vehicle'
 
 type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'guest'
@@ -48,6 +49,7 @@ export const useAuth = create<AuthState>()(
           useOrganizations.getState().reset()
           useVehicles.getState().reset()
           useMaintenance.getState().reset()
+          useNotifications.getState().reset()
           set({ user: null, status: 'guest' })
         }
       },
