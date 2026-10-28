@@ -16,6 +16,7 @@ import OrganizationMembers from './pages/OrganizationMembers'
 import Organizations from './pages/Organizations'
 import Register from './pages/Register'
 import Reminders from './pages/Reminders'
+import Reports from './pages/Reports'
 import VehicleDetail from './pages/VehicleDetail'
 import Vehicles from './pages/Vehicles'
 
@@ -40,6 +41,7 @@ export const routes: RouteObject[] = [
               { path: '/facturacion', element: <Billing /> },
               { path: '/notificaciones', element: <Notifications /> },
               { path: '/recordatorios', element: <Reminders /> },
+              { path: '/reportes', element: <Reports /> },
               { path: '/vehiculos/:id', element: <VehicleDetail /> },
               { path: '/vehiculos/:vehicleId/mantenimiento', element: <MaintenanceList /> },
               { path: '/vehiculos/:vehicleId/combustible', element: <FuelList /> },

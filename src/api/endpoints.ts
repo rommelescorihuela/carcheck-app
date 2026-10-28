@@ -5,6 +5,7 @@ import type {
   AuthResponse,
   BillingPayment,
   DocumentsSummary,
+  ExpenseReport,
   FuelEntry,
   FuelSummary,
   FuelType,
@@ -151,6 +152,36 @@ export interface VehiclePayload {
 export interface VehicleListParams {
   organizationId?: number | null
   scope?: 'personal'
+}
+
+export interface ReportParams {
+  from?: string
+  to?: string
+  organizationId?: number | null
+  scope?: 'personal'
+  vehicleId?: number
+}
+
+export async function expenseReport(params: ReportParams = {}): Promise<ExpenseReport> {
+  const search = new URLSearchParams()
+  for (const [key, value] of [
+    ['from', params.from],
+    ['to', params.to],
+    ['organization_id', params.organizationId],
+    ['scope', params.scope],
+    ['vehicle_id', params.vehicleId],
+  ] as const) {
+    if (value !== undefined && value !== null) {
+      search.set(key, String(value))
+    }
+  }
+  const query = search.toString()
+
+  const data = await request<{ data: ExpenseReport }>(
+    `/reports/expenses${query ? `?${query}` : ''}`,
+  )
+
+  return data.data
 }
 
 export interface ReminderListParams {

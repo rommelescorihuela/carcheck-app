@@ -368,6 +368,37 @@ export interface ReminderSyncResult {
   total: number
 }
 
+export interface ExpenseRow {
+  currency: string
+  maintenance: number
+  fuel: number
+  total: number
+  maintenance_entries: number
+  fuel_entries: number
+}
+
+export interface VehicleExpenseRow extends ExpenseRow {
+  vehicle: { id: number; make: string; model: string; plate: string | null }
+}
+
+export interface MonthlyExpenseRow extends ExpenseRow {
+  month: string
+}
+
+export interface BillingExpenseRow {
+  currency: string
+  payments: number
+  total: number
+}
+
+export interface ExpenseReport {
+  period: { from: string; to: string }
+  totals: ExpenseRow[]
+  vehicles: VehicleExpenseRow[]
+  monthly: MonthlyExpenseRow[]
+  billing: BillingExpenseRow[]
+}
+
 export interface PushSubscriptionPayload {
   endpoint: string
   keys: { p256dh: string; auth: string }
