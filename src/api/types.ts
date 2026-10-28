@@ -332,6 +332,42 @@ export interface NotificationPreferencesData {
   push_configured: boolean
 }
 
+export type ReminderKind = 'maintenance' | 'document'
+
+export type ReminderStatus = 'overdue' | 'upcoming'
+
+export interface Reminder {
+  id: number
+  kind: ReminderKind
+  kind_label: string
+  title: string
+  body: string
+  due_on: string | null
+  due_km: number | null
+  km_left: number | null
+  days_left: number | null
+  status: ReminderStatus
+  vehicle: {
+    id: number
+    make: string
+    model: string
+    plate: string | null
+  }
+  url: string
+  created_at: string
+}
+
+export interface ReminderMeta {
+  overdue: number
+  upcoming: number
+  total: number
+}
+
+export interface ReminderSyncResult {
+  created: number
+  total: number
+}
+
 export interface PushSubscriptionPayload {
   endpoint: string
   keys: { p256dh: string; auth: string }

@@ -21,6 +21,9 @@ import type {
   Paginated,
   Plan,
   PushSubscriptionPayload,
+  Reminder,
+  ReminderMeta,
+  ReminderSyncResult,
   Subscription,
   SubscriptionOverview,
   User,
@@ -148,6 +151,45 @@ export interface VehiclePayload {
 export interface VehicleListParams {
   organizationId?: number | null
   scope?: 'personal'
+}
+
+export interface ReminderListParams {
+  organizationId?: number | null
+  scope?: 'personal'
+}
+
+function reminderQuery(params: ReminderListParams = {}): string {
+  const search = new URLSearchParams()
+  if (params.organizationId != null) {
+    search.set('organization_id', String(params.organizationId))
+  }
+  if (params.scope) {
+    search.set('scope', params.scope)
+  }
+  const query = search.toString()
+
+  return query ? `?${query}` : ''
+}
+
+export async function listReminders(
+  params: ReminderListParams = {},
+): Promise<{ data: Reminder[]; meta: ReminderMeta }> {
+  return request<{ data: Reminder[]; meta: ReminderMeta }>(`/reminders${reminderQuery(params)}`)
+}
+
+export async function dismissReminder(id: number): Promise<void> {
+  await request(`/reminders/${id}/dismiss`, { method: 'POST' })
+}
+
+export async function syncReminders(
+  params: ReminderListParams = {},
+): Promise<ReminderSyncResult> {
+  const data = await request<{ message: string; data: ReminderSyncResult }>(
+    `/reminders/sync${reminderQuery(params)}`,
+    { method: 'POST' },
+  )
+
+  return data.data
 }
 
 export async function listVehicles(params: VehicleListParams = {}): Promise<Paginated<Vehicle>> {

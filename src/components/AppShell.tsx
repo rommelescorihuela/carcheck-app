@@ -51,6 +51,14 @@ export default function AppShell() {
             Facturación
           </NavLink>
           <NavLink
+            to="/recordatorios"
+            className={({ isActive }) =>
+              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+            }
+          >
+            Recordatorios
+          </NavLink>
+          <NavLink
             to="/notificaciones"
             className={({ isActive }) =>
               `flex items-center gap-1 text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
