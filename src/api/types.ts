@@ -147,6 +147,36 @@ export interface MaintenanceDue {
   source: 'plan' | 'manual'
 }
 
+export interface FuelEntry {
+  id: number
+  vehicle_id: number
+  filled_on: string
+  odometer_km: number
+  liters: Decimal
+  unit_price: Decimal
+  total: number
+  currency: string
+  full_tank: boolean
+  station: string | null
+  notes: string | null
+  distance_km: number | null
+  km_per_liter: number | null
+  cost_per_km: number | null
+  created_at: string
+  updated_at: string
+}
+
+export interface FuelSummary {
+  entries: number
+  total_liters: number
+  total_cost: number
+  distance_km: number
+  km_per_liter: number | null
+  cost_per_km: number | null
+  currency: string
+  last_filled_on: string | null
+}
+
 export class ApiError extends Error {
   status: number
 

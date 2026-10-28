@@ -2,6 +2,8 @@ import { request } from './client'
 import { clearToken, setToken } from './token'
 import type {
   AuthResponse,
+  FuelEntry,
+  FuelSummary,
   FuelType,
   MaintenanceDue,
   MaintenanceItemKind,
@@ -330,6 +332,60 @@ export async function deleteMaintenanceAttachment(
 
 export async function maintenanceDue(vehicleId: number): Promise<MaintenanceDue[]> {
   const data = await request<{ data: MaintenanceDue[] }>(`/vehicles/${vehicleId}/maintenance-due`)
+
+  return data.data
+}
+
+export interface FuelEntryPayload {
+  filled_on: string
+  odometer_km: number
+  liters: number
+  unit_price: number
+  full_tank?: boolean
+  station?: string | null
+  notes?: string | null
+}
+
+export async function listFuelEntries(vehicleId: number): Promise<Paginated<FuelEntry>> {
+  return request<Paginated<FuelEntry>>(`/vehicles/${vehicleId}/fuel-entries`)
+}
+
+export async function createFuelEntry(
+  vehicleId: number,
+  payload: FuelEntryPayload,
+): Promise<FuelEntry> {
+  const data = await request<{ data: FuelEntry }>(`/vehicles/${vehicleId}/fuel-entries`, {
+    method: 'POST',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function getFuelEntry(id: number): Promise<FuelEntry> {
+  const data = await request<{ data: FuelEntry }>(`/fuel-entries/${id}`)
+
+  return data.data
+}
+
+export async function updateFuelEntry(
+  id: number,
+  payload: FuelEntryPayload,
+): Promise<FuelEntry> {
+  const data = await request<{ data: FuelEntry }>(`/fuel-entries/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function deleteFuelEntry(id: number): Promise<void> {
+  await request(`/fuel-entries/${id}`, { method: 'DELETE' })
+}
+
+export async function fuelSummary(vehicleId: number): Promise<FuelSummary> {
+  const data = await request<{ data: FuelSummary }>(`/vehicles/${vehicleId}/fuel-summary`)
 
   return data.data
 }

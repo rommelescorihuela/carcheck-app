@@ -150,12 +150,20 @@ export default function VehicleDetail() {
         </Link>
       </div>
 
-      <Link
-        to={`/vehiculos/${vehicleId}/mantenimiento`}
-        className="inline-block text-sm font-medium text-teal-700"
-      >
-        Ver mantenimiento
-      </Link>
+      <div className="flex gap-4">
+        <Link
+          to={`/vehiculos/${vehicleId}/mantenimiento`}
+          className="inline-block text-sm font-medium text-teal-700"
+        >
+          Ver mantenimiento
+        </Link>
+        <Link
+          to={`/vehiculos/${vehicleId}/combustible`}
+          className="inline-block text-sm font-medium text-teal-700"
+        >
+          Ver combustible
+        </Link>
+      </div>
 
       {error && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}
 
