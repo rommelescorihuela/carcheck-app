@@ -6,7 +6,13 @@ const baseURL = `http://127.0.0.1:${FRONTEND_PORT}`
 
 export default defineConfig({
   testDir: './e2e',
+  // Todas las specs comparten la misma base de datos y el mismo `php artisan serve` (un solo
+  // proceso): en paralelo se pisan los datos y las peticiones se encolan. Una sola worker.
+  workers: 1,
   fullyParallel: false,
+  // `php artisan serve` arranca en frío y el registro/invitación encadenan varias peticiones.
+  timeout: 60_000,
+  expect: { timeout: 15_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'github' : 'list',

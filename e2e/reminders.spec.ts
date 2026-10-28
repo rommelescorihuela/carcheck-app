@@ -44,7 +44,7 @@ test('un documento por vencer genera un recordatorio y se puede descartar', asyn
   await page.getByLabel('Nombre').fill('Seguro 2026')
   await page.getByLabel('Vence el (opcional)').fill(isoInDays(10))
   await page.getByRole('button', { name: 'Agregar', exact: true }).click()
-  await expect(page.getByText('Seguro 2026')).toBeVisible()
+  await expect(page.getByRole('listitem').filter({ hasText: 'Seguro 2026' })).toBeVisible()
 
   // Recordatorios: la primera pasada crea el aviso.
   await page.getByRole('link', { name: 'Recordatorios' }).click()
