@@ -1,4 +1,5 @@
-import { request } from './client'
+import { download, request } from './client'
+import type { DownloadResult } from './client'
 import { clearToken, setToken } from './token'
 import type {
   AppNotification,
@@ -162,7 +163,7 @@ export interface ReportParams {
   vehicleId?: number
 }
 
-export async function expenseReport(params: ReportParams = {}): Promise<ExpenseReport> {
+function reportQuery(params: ReportParams): string {
   const search = new URLSearchParams()
   for (const [key, value] of [
     ['from', params.from],
@@ -177,11 +178,17 @@ export async function expenseReport(params: ReportParams = {}): Promise<ExpenseR
   }
   const query = search.toString()
 
-  const data = await request<{ data: ExpenseReport }>(
-    `/reports/expenses${query ? `?${query}` : ''}`,
-  )
+  return query ? `?${query}` : ''
+}
+
+export async function expenseReport(params: ReportParams = {}): Promise<ExpenseReport> {
+  const data = await request<{ data: ExpenseReport }>(`/reports/expenses${reportQuery(params)}`)
 
   return data.data
+}
+
+export function exportExpenseReport(params: ReportParams = {}): Promise<DownloadResult> {
+  return download(`/reports/expenses/export${reportQuery(params)}`)
 }
 
 export interface ReminderListParams {

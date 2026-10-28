@@ -1,13 +1,12 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import * as api from '../api/endpoints'
-import {
-  ApiError,
-  type ExpenseReport,
-  type ExpenseRow,
-  type MonthlyExpenseRow,
-  type VehicleExpenseRow,
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import type { ReportParams } from '../api/endpoints'
+import type {
+  ExpenseRow,
+  MonthlyExpenseRow,
+  VehicleExpenseRow,
 } from '../api/types'
 import { useOrganizations } from '../stores/organization'
+import { useReports } from '../stores/reports'
 
 function isoDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -98,72 +97,71 @@ export default function Reports() {
   const organizations = useOrganizations((state) => state.organizations)
   const loadOrganizations = useOrganizations((state) => state.load)
 
+  const report = useReports((state) => state.report)
+  const loading = useReports((state) => state.loading)
+  const exporting = useReports((state) => state.exporting)
+  const apiError = useReports((state) => state.error)
+  const loadReport = useReports((state) => state.load)
+  const exportCsv = useReports((state) => state.exportCsv)
+
   const [range, setRange] = useState({ from: startOfYear(), to: isoDate(new Date()) })
   const [draft, setDraft] = useState(range)
-  const [report, setReport] = useState<ExpenseReport | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [formError, setFormError] = useState<string | null>(null)
 
   const active = organizations.find((organization) => organization.id === activeId)
+
+  const params = useMemo<ReportParams>(
+    () => ({
+      from: range.from,
+      to: range.to,
+      ...(activeId ? { organizationId: activeId } : { scope: 'personal' as const }),
+    }),
+    [activeId, range],
+  )
 
   useEffect(() => {
     void loadOrganizations()
   }, [loadOrganizations])
 
   useEffect(() => {
-    let current = true
-    setLoading(true)
-    setError(null)
-
-    api
-      .expenseReport({
-        from: range.from,
-        to: range.to,
-        ...(activeId ? { organizationId: activeId } : { scope: 'personal' as const }),
-      })
-      .then((data) => {
-        if (current) {
-          setReport(data)
-        }
-      })
-      .catch((cause: unknown) => {
-        if (current) {
-          setError(cause instanceof ApiError ? cause.message : 'No se pudo cargar el informe.')
-        }
-      })
-      .finally(() => {
-        if (current) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      current = false
-    }
-  }, [activeId, range])
+    void loadReport(params)
+  }, [loadReport, params])
 
   function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (draft.from > draft.to) {
-      setError('La fecha "Desde" no puede ser posterior a "Hasta".')
+      setFormError('La fecha "Desde" no puede ser posterior a "Hasta".')
       return
     }
 
+    setFormError(null)
     setRange(draft)
   }
 
   const period = report?.period ?? range
   const hasExpenses = (report?.totals.length ?? 0) > 0
+  const hasData = hasExpenses || (report?.billing.length ?? 0) > 0
+  const error = formError ?? apiError
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Reportes</h1>
-        <p className="text-sm text-slate-500">
-          Ámbito: {active ? active.name : 'Personal'} · del {formatDay(period.from)} al{' '}
-          {formatDay(period.to)}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Reportes</h1>
+          <p className="text-sm text-slate-500">
+            Ámbito: {active ? active.name : 'Personal'} · del {formatDay(period.from)} al{' '}
+            {formatDay(period.to)}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => void exportCsv(params)}
+          disabled={!hasData || loading || exporting}
+          className="rounded border border-teal-700 px-3 py-2 text-sm font-medium text-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {exporting ? 'Exportando…' : 'Exportar CSV'}
+        </button>
       </div>
 
       <form onSubmit={apply} className="flex flex-wrap items-end gap-3 rounded border border-slate-200 bg-white p-4">

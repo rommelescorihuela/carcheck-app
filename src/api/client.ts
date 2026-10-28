@@ -12,6 +12,11 @@ export interface RequestOptions {
   retry?: boolean
 }
 
+export interface DownloadResult {
+  blob: Blob
+  filename: string
+}
+
 let refreshPromise: Promise<boolean> | null = null
 
 async function refreshToken(): Promise<boolean> {
@@ -61,7 +66,11 @@ async function toApiError(response: Response): Promise<ApiError> {
   return new ApiError(response.status, body.message ?? 'Error inesperado', body.errors ?? {})
 }
 
-export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+/**
+ * Ejecuta la petición y devuelve la respuesta cruda (JSON, blob o vacía). Centraliza el token,
+ * la renovación ante 401 y la traducción de errores.
+ */
+async function send(path: string, options: RequestOptions = {}): Promise<Response> {
   const { method = 'GET', body, auth = true, retry = true } = options
 
   const headers: Record<string, string> = { Accept: 'application/json' }
@@ -85,7 +94,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   if (response.status === 401 && auth && retry && getToken()) {
     const refreshed = await refreshToken()
     if (refreshed) {
-      return request<T>(path, { ...options, retry: false })
+      return send(path, { ...options, retry: false })
     }
 
     clearToken()
@@ -95,9 +104,50 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
     throw await toApiError(response)
   }
 
+  return response
+}
+
+export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const response = await send(path, options)
+
   if (response.status === 204) {
     return undefined as T
   }
 
   return (await response.json()) as T
+}
+
+/**
+ * Descarga autenticada de un archivo. No usa `window.open` porque el navegador no enviaría el
+ * header `Authorization`.
+ */
+export async function download(
+  path: string,
+  options: RequestOptions = {},
+): Promise<DownloadResult> {
+  const response = await send(path, options)
+
+  return {
+    blob: await response.blob(),
+    filename: filenameFrom(response.headers.get('Content-Disposition'), 'informe.csv'),
+  }
+}
+
+function filenameFrom(header: string | null, fallback: string): string {
+  if (!header) {
+    return fallback
+  }
+
+  const encoded = /filename\*=(?:UTF-8'')?"?([^";]+)"?/i.exec(header)
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded[1].trim())
+    } catch {
+      // cabecera mal formada: seguimos con `filename`
+    }
+  }
+
+  const plain = /filename="?([^";]+)"?/i.exec(header)
+
+  return plain ? plain[1].trim() : fallback
 }

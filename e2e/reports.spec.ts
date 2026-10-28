@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { expect, test, type Page } from '@playwright/test'
 
 const password = 'secret-password'
@@ -65,10 +66,22 @@ test('el informe suma mantenimiento y combustible por vehículo y mes', async ({
   await expect(page.getByText(/Combustible USD 40,00/)).toBeVisible()
   await expect(page.getByText('Toyota Corolla (USD)')).toBeVisible()
 
-  // Un periodo sin gastos deja el informe vacío.
+  // El CSV va autenticado y repite el mismo informe.
+  const downloadPromise = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Exportar CSV' }).click()
+  const download = await downloadPromise
+  expect(download.suggestedFilename()).toMatch(/^gastos_\d{4}-01-01_\d{4}-\d{2}-\d{2}\.csv$/)
+
+  const csv = readFileSync((await download.path())!, 'utf8')
+  expect(csv).toContain('USD,20.00,40.00,60.00,1,1')
+  expect(csv).toContain('"Toyota Corolla",')
+  expect(csv).toContain('Suscripciones')
+
+  // Un periodo sin gastos deja el informe vacío y sin exportación disponible.
   await page.getByLabel('Desde').fill('2025-01-01')
   await page.getByLabel('Hasta').fill('2025-12-31')
   await page.getByRole('button', { name: 'Aplicar' }).click()
   await expect(page.getByText('No hay gastos en este periodo.')).toBeVisible()
   await expect(page.getByText('USD 60,00')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Exportar CSV' })).toBeDisabled()
 })
