@@ -32,6 +32,9 @@ export default defineConfig({
         // El correo se renderiza de inmediato al log (storage/logs/laravel.log).
         QUEUE_CONNECTION: 'sync',
         MAIL_MAILER: 'log',
+        // Cache en memoria por request: desactiva el rate limiter (register/login)
+        // para que corridas repetidas del E2E no den 429.
+        CACHE_STORE: 'array',
       },
     },
     {

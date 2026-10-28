@@ -150,6 +150,13 @@ export default function VehicleDetail() {
         </Link>
       </div>
 
+      <Link
+        to={`/vehiculos/${vehicleId}/mantenimiento`}
+        className="inline-block text-sm font-medium text-teal-700"
+      >
+        Ver mantenimiento
+      </Link>
+
       {error && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}
 
       {!canManage && (

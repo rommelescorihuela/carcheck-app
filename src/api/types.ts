@@ -84,6 +84,69 @@ export interface Paginated<T> {
   }
 }
 
+export type MaintenanceItemKind = 'labor' | 'part' | 'other'
+
+export interface MaintenanceType {
+  id: number
+  name: string
+  slug: string | null
+  interval_km: number | null
+  interval_months: number | null
+  is_global: boolean
+  owner_type: string | null
+  owner_id: number | null
+}
+
+export interface MaintenanceItem {
+  id: number
+  kind: MaintenanceItemKind
+  description: string
+  quantity: Decimal
+  unit_price: Decimal
+}
+
+export interface MaintenanceAttachment {
+  id: number
+  file_name: string
+  url: string
+}
+
+export interface MaintenanceRecord {
+  id: number
+  vehicle_id: number
+  maintenance_type_id: number | null
+  type: MaintenanceType | null
+  performed_on: string
+  odometer_km: number
+  provider: string | null
+  notes: string | null
+  next_due_km: number | null
+  next_due_date: string | null
+  currency: string
+  total: number
+  items: MaintenanceItem[]
+  attachments: MaintenanceAttachment[]
+  created_at: string
+  updated_at: string
+}
+
+export interface MaintenancePlan {
+  id: number
+  vehicle_id: number
+  maintenance_type_id: number
+  interval_km: number | null
+  interval_months: number | null
+  type: MaintenanceType
+}
+
+export interface MaintenanceDue {
+  maintenance_type: { id: number; name: string }
+  due_km: number | null
+  due_date: string | null
+  status: 'ok' | 'soon' | 'due'
+  source: 'plan' | 'manual'
+}
+
 export class ApiError extends Error {
   status: number
 

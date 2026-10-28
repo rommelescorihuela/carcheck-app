@@ -3,6 +3,11 @@ import { clearToken, setToken } from './token'
 import type {
   AuthResponse,
   FuelType,
+  MaintenanceDue,
+  MaintenanceItemKind,
+  MaintenancePlan,
+  MaintenanceRecord,
+  MaintenanceType,
   Member,
   Organization,
   OrganizationRole,
@@ -196,6 +201,135 @@ export async function transferVehicle(
     method: 'POST',
     body: payload,
   })
+
+  return data.data
+}
+
+export interface MaintenanceRecordPayload {
+  maintenance_type_id?: number | null
+  performed_on: string
+  odometer_km: number
+  provider?: string | null
+  notes?: string | null
+  next_due_km?: number | null
+  next_due_date?: string | null
+  items?: {
+    kind: MaintenanceItemKind
+    description: string
+    quantity: number
+    unit_price: number
+  }[]
+}
+
+export async function listMaintenanceTypes(): Promise<MaintenanceType[]> {
+  const data = await request<{ data: MaintenanceType[] }>('/maintenance-types')
+
+  return data.data
+}
+
+export async function createMaintenanceType(payload: {
+  name: string
+  interval_km?: number | null
+  interval_months?: number | null
+  organization_id?: number | null
+}): Promise<MaintenanceType> {
+  const data = await request<{ data: MaintenanceType }>('/maintenance-types', {
+    method: 'POST',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function listMaintenancePlans(vehicleId: number): Promise<MaintenancePlan[]> {
+  const data = await request<{ data: MaintenancePlan[] }>(
+    `/vehicles/${vehicleId}/maintenance-plans`,
+  )
+
+  return data.data
+}
+
+export async function upsertMaintenancePlan(
+  vehicleId: number,
+  typeId: number,
+  payload: { interval_km?: number | null; interval_months?: number | null },
+): Promise<MaintenancePlan> {
+  const data = await request<{ data: MaintenancePlan }>(
+    `/vehicles/${vehicleId}/maintenance-plans/${typeId}`,
+    { method: 'PUT', body: payload },
+  )
+
+  return data.data
+}
+
+export async function listMaintenanceRecords(
+  vehicleId: number,
+): Promise<Paginated<MaintenanceRecord>> {
+  return request<Paginated<MaintenanceRecord>>(`/vehicles/${vehicleId}/maintenance-records`)
+}
+
+export async function createMaintenanceRecord(
+  vehicleId: number,
+  payload: MaintenanceRecordPayload,
+): Promise<MaintenanceRecord> {
+  const data = await request<{ data: MaintenanceRecord }>(
+    `/vehicles/${vehicleId}/maintenance-records`,
+    { method: 'POST', body: payload },
+  )
+
+  return data.data
+}
+
+export async function getMaintenanceRecord(id: number): Promise<MaintenanceRecord> {
+  const data = await request<{ data: MaintenanceRecord }>(`/maintenance-records/${id}`)
+
+  return data.data
+}
+
+export async function updateMaintenanceRecord(
+  id: number,
+  payload: MaintenanceRecordPayload,
+): Promise<MaintenanceRecord> {
+  const data = await request<{ data: MaintenanceRecord }>(`/maintenance-records/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function deleteMaintenanceRecord(id: number): Promise<void> {
+  await request(`/maintenance-records/${id}`, { method: 'DELETE' })
+}
+
+export async function uploadMaintenanceAttachment(
+  recordId: number,
+  file: File,
+): Promise<MaintenanceRecord> {
+  const form = new FormData()
+  form.append('file', file)
+  const data = await request<{ data: MaintenanceRecord }>(
+    `/maintenance-records/${recordId}/attachments`,
+    { method: 'POST', body: form },
+  )
+
+  return data.data
+}
+
+export async function deleteMaintenanceAttachment(
+  recordId: number,
+  mediaId: number,
+): Promise<MaintenanceRecord> {
+  const data = await request<{ data: MaintenanceRecord }>(
+    `/maintenance-records/${recordId}/attachments/${mediaId}`,
+    { method: 'DELETE' },
+  )
+
+  return data.data
+}
+
+export async function maintenanceDue(vehicleId: number): Promise<MaintenanceDue[]> {
+  const data = await request<{ data: MaintenanceDue[] }>(`/vehicles/${vehicleId}/maintenance-due`)
 
   return data.data
 }

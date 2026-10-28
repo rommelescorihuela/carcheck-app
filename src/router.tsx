@@ -5,6 +5,8 @@ import RootLayout from './components/RootLayout'
 import AcceptInvitation from './pages/AcceptInvitation'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import MaintenanceDetail from './pages/MaintenanceDetail'
+import MaintenanceList from './pages/MaintenanceList'
 import NotFound from './pages/NotFound'
 import OrganizationMembers from './pages/OrganizationMembers'
 import Organizations from './pages/Organizations'
@@ -31,6 +33,8 @@ export const routes: RouteObject[] = [
               { path: '/organizaciones/:id', element: <OrganizationMembers /> },
               { path: '/vehiculos', element: <Vehicles /> },
               { path: '/vehiculos/:id', element: <VehicleDetail /> },
+              { path: '/vehiculos/:vehicleId/mantenimiento', element: <MaintenanceList /> },
+              { path: '/mantenimiento/:recordId', element: <MaintenanceDetail /> },
             ],
           },
         ],

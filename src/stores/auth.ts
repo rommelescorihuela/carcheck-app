@@ -5,6 +5,7 @@ import * as authApi from '../api/endpoints'
 import { clearToken, getToken } from '../api/token'
 import type { User } from '../api/types'
 import { useOrganizations } from './organization'
+import { useMaintenance } from './maintenance'
 import { useVehicles } from './vehicle'
 
 type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'guest'
@@ -46,6 +47,7 @@ export const useAuth = create<AuthState>()(
           clearToken()
           useOrganizations.getState().reset()
           useVehicles.getState().reset()
+          useMaintenance.getState().reset()
           set({ user: null, status: 'guest' })
         }
       },
