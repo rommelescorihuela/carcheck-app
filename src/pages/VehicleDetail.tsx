@@ -163,6 +163,12 @@ export default function VehicleDetail() {
         >
           Ver combustible
         </Link>
+        <Link
+          to={`/vehiculos/${vehicleId}/documentos`}
+          className="inline-block text-sm font-medium text-teal-700"
+        >
+          Ver documentos
+        </Link>
       </div>
 
       {error && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}

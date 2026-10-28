@@ -177,6 +177,51 @@ export interface FuelSummary {
   last_filled_on: string | null
 }
 
+export type DocumentKind = 'insurance' | 'inspection' | 'tax' | 'license' | 'other'
+
+export type DocumentStatusValue = 'valid' | 'expiring' | 'expired'
+
+export interface DocumentFile {
+  id: number
+  file_name: string
+  url: string
+  mime_type: string
+  size: number
+}
+
+export interface VehicleDocument {
+  id: number
+  vehicle_id: number
+  kind: DocumentKind
+  kind_label: string
+  name: string
+  issuer: string | null
+  reference: string | null
+  issued_on: string | null
+  expires_on: string | null
+  notes: string | null
+  status: DocumentStatusValue
+  days_left: number | null
+  file: DocumentFile | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DocumentsSummary {
+  total: number
+  valid: number
+  expiring: number
+  expired: number
+  next_expiration: {
+    id: number
+    name: string
+    kind: DocumentKind
+    kind_label: string
+    expires_on: string
+    days_left: number
+  } | null
+}
+
 export class ApiError extends Error {
   status: number
 

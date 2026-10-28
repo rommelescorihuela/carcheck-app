@@ -2,6 +2,7 @@ import { request } from './client'
 import { clearToken, setToken } from './token'
 import type {
   AuthResponse,
+  DocumentsSummary,
   FuelEntry,
   FuelSummary,
   FuelType,
@@ -16,6 +17,7 @@ import type {
   Paginated,
   User,
   Vehicle,
+  VehicleDocument,
   VehicleType,
 } from './types'
 
@@ -386,6 +388,79 @@ export async function deleteFuelEntry(id: number): Promise<void> {
 
 export async function fuelSummary(vehicleId: number): Promise<FuelSummary> {
   const data = await request<{ data: FuelSummary }>(`/vehicles/${vehicleId}/fuel-summary`)
+
+  return data.data
+}
+
+export interface DocumentPayload {
+  kind: VehicleDocument['kind']
+  name: string
+  issuer?: string | null
+  reference?: string | null
+  issued_on?: string | null
+  expires_on?: string | null
+  notes?: string | null
+}
+
+export async function listDocuments(vehicleId: number): Promise<Paginated<VehicleDocument>> {
+  return request<Paginated<VehicleDocument>>(`/vehicles/${vehicleId}/documents`)
+}
+
+export async function createDocument(
+  vehicleId: number,
+  payload: DocumentPayload,
+): Promise<VehicleDocument> {
+  const data = await request<{ data: VehicleDocument }>(`/vehicles/${vehicleId}/documents`, {
+    method: 'POST',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function getDocument(id: number): Promise<VehicleDocument> {
+  const data = await request<{ data: VehicleDocument }>(`/documents/${id}`)
+
+  return data.data
+}
+
+export async function updateDocument(
+  id: number,
+  payload: DocumentPayload,
+): Promise<VehicleDocument> {
+  const data = await request<{ data: VehicleDocument }>(`/documents/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })
+
+  return data.data
+}
+
+export async function deleteDocument(id: number): Promise<void> {
+  await request(`/documents/${id}`, { method: 'DELETE' })
+}
+
+export async function uploadDocumentFile(id: number, file: File): Promise<VehicleDocument> {
+  const form = new FormData()
+  form.append('file', file)
+  const data = await request<{ data: VehicleDocument }>(`/documents/${id}/file`, {
+    method: 'POST',
+    body: form,
+  })
+
+  return data.data
+}
+
+export async function deleteDocumentFile(id: number): Promise<VehicleDocument> {
+  const data = await request<{ data: VehicleDocument }>(`/documents/${id}/file`, {
+    method: 'DELETE',
+  })
+
+  return data.data
+}
+
+export async function documentsSummary(vehicleId: number): Promise<DocumentsSummary> {
+  const data = await request<{ data: DocumentsSummary }>(`/vehicles/${vehicleId}/documents-summary`)
 
   return data.data
 }

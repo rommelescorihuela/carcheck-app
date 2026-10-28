@@ -3,6 +3,7 @@ import AppShell from './components/AppShell'
 import ProtectedRoute from './components/ProtectedRoute'
 import RootLayout from './components/RootLayout'
 import AcceptInvitation from './pages/AcceptInvitation'
+import DocumentsList from './pages/DocumentsList'
 import FuelList from './pages/FuelList'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -36,6 +37,7 @@ export const routes: RouteObject[] = [
               { path: '/vehiculos/:id', element: <VehicleDetail /> },
               { path: '/vehiculos/:vehicleId/mantenimiento', element: <MaintenanceList /> },
               { path: '/vehiculos/:vehicleId/combustible', element: <FuelList /> },
+              { path: '/vehiculos/:vehicleId/documentos', element: <DocumentsList /> },
               { path: '/mantenimiento/:recordId', element: <MaintenanceDetail /> },
             ],
           },
