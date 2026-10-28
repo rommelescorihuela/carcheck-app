@@ -222,6 +222,83 @@ export interface DocumentsSummary {
   } | null
 }
 
+
+export type PlanInterval = 'monthly' | 'yearly'
+
+export interface Plan {
+  id: number
+  code: string
+  name: string
+  description: string | null
+  price: Decimal
+  currency: string
+  interval: PlanInterval
+  interval_label: string
+  trial_days: number
+  max_vehicles: number | null
+  max_members: number | null
+  sort: number
+}
+
+export type SubscriptionStatusValue = 'trialing' | 'pending_payment' | 'active' | 'canceled'
+
+export type EffectiveSubscriptionStatus = SubscriptionStatusValue | 'expired'
+
+export interface Subscription {
+  id: number
+  plan: Plan
+  status: SubscriptionStatusValue
+  status_label: string
+  effective_status: EffectiveSubscriptionStatus
+  effective_status_label: string
+  has_access: boolean
+  trial_ends_at: string | null
+  trial_days_left: number | null
+  current_period_start: string | null
+  current_period_end: string | null
+  days_left: number | null
+  canceled_at: string | null
+  payment_method: string | null
+  payment_method_label: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface SubscriptionOverview {
+  subscription: Subscription | null
+  usage: { vehicles: number; members: number | null }
+  can_manage: boolean
+}
+
+export type PaymentMethodValue =
+  | 'transfer'
+  | 'mobile_payment'
+  | 'zelle'
+  | 'binance'
+  | 'cash'
+  | 'other'
+
+export type PaymentStatusValue = 'pending' | 'approved' | 'rejected'
+
+export interface BillingPayment {
+  id: number
+  subscription_id: number
+  amount: Decimal
+  currency: string
+  exchange_rate: Decimal
+  amount_base: number
+  method: PaymentMethodValue
+  method_label: string
+  reference: string | null
+  paid_on: string
+  status: PaymentStatusValue
+  status_label: string
+  notes: string | null
+  proof: { id: number; file_name: string; url: string } | null
+  reviewed_at: string | null
+  created_at: string
+}
+
 export class ApiError extends Error {
   status: number
 

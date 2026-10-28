@@ -2,6 +2,7 @@ import { request } from './client'
 import { clearToken, setToken } from './token'
 import type {
   AuthResponse,
+  BillingPayment,
   DocumentsSummary,
   FuelEntry,
   FuelSummary,
@@ -15,6 +16,9 @@ import type {
   Organization,
   OrganizationRole,
   Paginated,
+  Plan,
+  Subscription,
+  SubscriptionOverview,
   User,
   Vehicle,
   VehicleDocument,
@@ -461,6 +465,115 @@ export async function deleteDocumentFile(id: number): Promise<VehicleDocument> {
 
 export async function documentsSummary(vehicleId: number): Promise<DocumentsSummary> {
   const data = await request<{ data: DocumentsSummary }>(`/vehicles/${vehicleId}/documents-summary`)
+
+  return data.data
+}
+
+export interface BillingPaymentPayload {
+  amount: number
+  currency: string
+  exchange_rate?: number
+  method: BillingPayment['method']
+  reference?: string | null
+  paid_on: string
+  notes?: string | null
+}
+
+function orgSuffix(organizationId?: number | null): string {
+  return organizationId ? `?organization_id=${organizationId}` : ''
+}
+
+function orgBody(organizationId?: number | null): { organization_id?: number } {
+  return organizationId ? { organization_id: organizationId } : {}
+}
+
+export async function listPlans(): Promise<Plan[]> {
+  const data = await request<{ data: Plan[] }>('/billing/plans')
+
+  return data.data
+}
+
+export async function billingOverview(
+  organizationId?: number | null,
+): Promise<SubscriptionOverview> {
+  const data = await request<{ data: SubscriptionOverview }>(
+    `/billing/subscription${orgSuffix(organizationId)}`,
+  )
+
+  return data.data
+}
+
+export async function startSubscription(
+  planId: number,
+  organizationId?: number | null,
+): Promise<Subscription> {
+  const data = await request<{ data: Subscription }>('/billing/subscription', {
+    method: 'POST',
+    body: { plan_id: planId, ...orgBody(organizationId) },
+  })
+
+  return data.data
+}
+
+export async function changeSubscription(
+  planId: number,
+  organizationId?: number | null,
+): Promise<Subscription> {
+  const data = await request<{ data: Subscription }>('/billing/subscription', {
+    method: 'PATCH',
+    body: { plan_id: planId, ...orgBody(organizationId) },
+  })
+
+  return data.data
+}
+
+export async function cancelSubscription(
+  organizationId?: number | null,
+): Promise<Subscription> {
+  const data = await request<{ data: Subscription }>('/billing/subscription', {
+    method: 'DELETE',
+    body: orgBody(organizationId),
+  })
+
+  return data.data
+}
+
+export async function listBillingPayments(
+  organizationId?: number | null,
+): Promise<Paginated<BillingPayment>> {
+  return request<Paginated<BillingPayment>>(`/billing/payments${orgSuffix(organizationId)}`)
+}
+
+export async function reportPayment(
+  payload: BillingPaymentPayload,
+  organizationId?: number | null,
+): Promise<BillingPayment> {
+  const data = await request<{ data: BillingPayment }>('/billing/payments', {
+    method: 'POST',
+    body: { ...payload, ...orgBody(organizationId) },
+  })
+
+  return data.data
+}
+
+export async function uploadPaymentProof(
+  paymentId: number,
+  file: File,
+): Promise<BillingPayment> {
+  const form = new FormData()
+  form.append('file', file)
+  const data = await request<{ data: BillingPayment }>(`/billing/payments/${paymentId}/proof`, {
+    method: 'POST',
+    body: form,
+  })
+
+  return data.data
+}
+
+export async function deletePaymentProof(paymentId: number): Promise<BillingPayment> {
+  const data = await request<{ data: BillingPayment }>(`/billing/payments/${paymentId}/proof`, {
+    method: 'DELETE',
+  })
 
   return data.data
 }
