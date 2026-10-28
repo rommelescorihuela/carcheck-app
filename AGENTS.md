@@ -7,8 +7,9 @@ Textos de UI en **español**.
 
 ## Documentación
 
-- `../carcheck/SPEC-MAP.md` y `../carcheck/SPEC-identity.md` — contrato del módulo `identity`.
-- `../carcheck/tasks/plan.md` + `todo.md` — plan y estado.
+- `../carcheck/SPEC-MAP.md` — mapa de módulos (todos cerrados) y contrato de cada uno.
+- `../carcheck/tasks/README.md` — índice de planes y estado.
+- `../carcheck/DEPLOY.md` — despliegue del backend y de la PWA; plantilla `.env.production.example`.
 - Contrato real de la API: `../carcheck/routes/api.php` y `../carcheck/app/Http/Controllers/Api/`.
 
 ## Comandos
@@ -19,7 +20,7 @@ npm install
 npm run dev                 # Vite en http://localhost:5174 (requiere el backend en marcha)
 npm run typecheck           # tsc -b --noEmit
 npm run test                # Vitest en modo run (solo src/**)
-npm run build               # tsc -b && vite build (genera dist/ + manifest + sw)
+npm run build               # tsc -b && vite build (genera dist/ + manifest + sw; en prod usa .env.production)
 npx playwright test         # E2E: levanta backend (:8001) y frontend (:5174)
 ```
 
@@ -35,6 +36,9 @@ Verificación antes de dar algo por terminado: `npm run typecheck && npm run tes
   en `src/api/token.ts`. `bootstrap()` valida con `GET /user`.
 - **Organización activa**: `src/stores/organization.ts` (persiste `activeId`; `null` = ámbito
   personal). Al cerrar sesión se hace `reset()`.
+- **Reportes**: `src/stores/reports.ts` carga `GET /reports/expenses` y exporta el CSV autenticado
+  (`download()` en `client.ts` + `saveBlob()` en `lib/download.ts`); nunca se usa `window.open`
+  porque perdería el `Bearer`.
 - **Rutas**: `src/router.tsx` — `RootLayout` (bootstrap) → `ProtectedRoute` → `AppShell`. Las rutas
   estáticas van **antes** que las de parámetro (`:id`).
 - **PWA**: `vite-plugin-pwa`; el build genera `manifest.webmanifest` + `sw.js`. Íconos en
