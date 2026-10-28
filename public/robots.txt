@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /organizaciones
+Disallow: /vehiculos
+Disallow: /recordatorios
+Disallow: /reportes
+Disallow: /facturacion
+Disallow: /notificaciones
+Disallow: /mantenimiento
