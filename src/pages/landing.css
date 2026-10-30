@@ -1417,26 +1417,32 @@
     max-width: 52ch;
   }
 
+  .lp-hero-copy {
+    padding-bottom: 14px;
+  }
+
   .lp-hero-visual {
     height: auto;
-    margin-right: 0;
+    margin-inline: calc((100vw - 100%) / -2);
   }
 
   .lp-hero-photo {
     height: auto;
-    aspect-ratio: 4 / 3;
-    border-radius: 20px;
+    aspect-ratio: 16 / 11;
+    border-radius: 0;
   }
 
   .lp-hero-stamp {
-    top: 16px;
+    top: auto;
     right: 16px;
+    bottom: 16px;
   }
 
   .lp-float-card {
-    left: 14px;
-    bottom: 14px;
-    width: calc(100% - 28px);
+    left: 16px;
+    top: -26px;
+    bottom: auto;
+    width: calc(100% - 32px);
     max-width: 340px;
   }
 
@@ -1648,6 +1654,10 @@
   .lp-tabs {
     flex-wrap: wrap;
     overflow: visible;
+  }
+
+  .lp-float-badge {
+    display: none;
   }
 
   .lp-brand {
