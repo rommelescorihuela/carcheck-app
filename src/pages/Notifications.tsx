@@ -274,15 +274,18 @@ export default function Notifications() {
                 <div>
                   <p className="flex items-center gap-2 font-medium text-slate-800">
                     {notification.read_at === null && (
-                      <span
-                        aria-label="Sin leer"
-                        className="inline-block h-2 w-2 rounded-full bg-brand-600"
-                      />
+                      <>
+                        <span
+                          aria-hidden="true"
+                          className="inline-block h-2 w-2 rounded-full bg-brand-600"
+                        />
+                        <span className="sr-only">Sin leer</span>
+                      </>
                     )}
                     {notification.title}
                   </p>
                   <p className="text-sm text-slate-600">{notification.body}</p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-slate-500">
                     {formatDate(notification.created_at)}
                   </p>
                 </div>

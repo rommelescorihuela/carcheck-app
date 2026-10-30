@@ -127,7 +127,7 @@ export default function MaintenanceDetail() {
           {record.items.map((item) => (
             <li key={item.id} className="flex items-center justify-between">
               <span className="text-slate-700">
-                {item.description} <span className="text-slate-400">({item.kind})</span>
+                {item.description} <span className="text-slate-500">({item.kind})</span>
               </span>
               <span className="text-slate-600">
                 {item.quantity} × {item.unit_price}

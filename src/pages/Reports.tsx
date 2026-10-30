@@ -53,35 +53,51 @@ function ExpenseTable<T extends ExpenseRow>({
   rows,
   describe,
   empty,
+  label,
 }: {
   rows: T[]
   describe: (row: T) => string
   empty: string
+  label: string
 }) {
   if (rows.length === 0) {
     return <p className="text-sm text-slate-500">{empty}</p>
   }
 
   return (
-    <div className="overflow-x-auto">
+    // La tabla se desplaza en horizontal en pantallas estrechas: necesita foco de teclado.
+    <div
+      role="region"
+      aria-label={label}
+      tabIndex={0}
+      className="overflow-x-auto rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+    >
       <table className="w-full text-left text-sm">
         <thead className="text-xs uppercase text-slate-500">
           <tr>
-            <th className="py-2">Concepto</th>
-            <th className="py-2 text-right">Mantenimiento</th>
-            <th className="py-2 text-right">Combustible</th>
-            <th className="py-2 text-right">Total</th>
+            <th scope="col" className="py-2">Concepto</th>
+            <th scope="col" className="py-2 text-right">
+              <span className="sm:hidden">Mant.</span>
+              <span className="hidden sm:inline">Mantenimiento</span>
+            </th>
+            <th scope="col" className="py-2 text-right">
+              <span className="sm:hidden">Comb.</span>
+              <span className="hidden sm:inline">Combustible</span>
+            </th>
+            <th scope="col" className="py-2 text-right">Total</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row, index) => (
             <tr key={`${describe(row)}-${row.currency}-${index}`} className="border-t border-slate-100">
-              <td className="py-2 text-slate-800">{describe(row)}</td>
-              <td className="py-2 text-right text-slate-700">
+              <td className="py-2 pr-3 text-slate-800">{describe(row)}</td>
+              <td className="whitespace-nowrap py-2 pl-2 text-right text-slate-700">
                 {money(row.maintenance, row.currency)}
               </td>
-              <td className="py-2 text-right text-slate-700">{money(row.fuel, row.currency)}</td>
-              <td className="py-2 text-right font-medium text-slate-900">
+              <td className="whitespace-nowrap py-2 pl-2 text-right text-slate-700">
+                {money(row.fuel, row.currency)}
+              </td>
+              <td className="whitespace-nowrap py-2 pl-3 text-right font-medium text-slate-900">
                 {money(row.total, row.currency)}
               </td>
             </tr>
@@ -233,9 +249,10 @@ export default function Reports() {
             <ExpenseTable<VehicleExpenseRow>
               rows={report?.vehicles ?? []}
               describe={(row) =>
-                `${row.vehicle.make} ${row.vehicle.model}${row.vehicle.plate ? ` · ${row.vehicle.plate}` : ''} (${row.currency})`
+                `${row.vehicle.make} ${row.vehicle.model}${row.vehicle.plate ? ` · ${row.vehicle.plate}` : ''}`
               }
               empty="Sin gastos por vehículo en el periodo."
+              label="Gastos por vehículo"
             />
           </section>
 
@@ -243,8 +260,9 @@ export default function Reports() {
             <h2 className="text-lg font-semibold text-slate-800">Por mes</h2>
             <ExpenseTable<MonthlyExpenseRow>
               rows={report?.monthly ?? []}
-              describe={(row) => `${formatMonth(row.month)} (${row.currency})`}
+              describe={(row) => formatMonth(row.month)}
               empty="Sin gastos por mes en el periodo."
+              label="Gastos por mes"
             />
           </section>
         </>

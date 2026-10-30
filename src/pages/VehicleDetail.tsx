@@ -190,6 +190,7 @@ export default function VehicleDetail() {
           <div className="flex items-center gap-3">
             <input
               type="file"
+              aria-label="Foto del vehículo"
               accept="image/jpeg,image/png,image/webp"
               onChange={(event) => void handlePhoto(event)}
               disabled={busy}
@@ -240,6 +241,7 @@ export default function VehicleDetail() {
           <h2 className="text-lg font-semibold text-slate-800">Traspasar</h2>
           <div className="flex items-center gap-2">
             <select
+              aria-label="Organización de destino"
               value={transferTarget}
               onChange={(event) => setTransferTarget(event.target.value)}
               className="rounded border border-slate-300 px-2 py-2 text-sm"

@@ -112,7 +112,7 @@ export default function OrganizationMembers() {
               <p className="font-medium text-slate-800">
                 {member.name}
                 {member.id === currentUser?.id && (
-                  <span className="ml-2 text-xs text-slate-400">(tú)</span>
+                  <span className="ml-2 text-xs text-slate-500">(tú)</span>
                 )}
               </p>
               <p className="text-sm text-slate-500">{member.email}</p>

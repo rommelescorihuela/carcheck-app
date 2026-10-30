@@ -218,6 +218,9 @@ export default function Billing() {
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold text-slate-800">Pagos reportados</h2>
+        {!loading && payments.length === 0 && (
+          <p className="text-sm text-slate-500">Sin pagos reportados.</p>
+        )}
         <ul className="space-y-2">
           {payments.map((payment) => (
             <li
@@ -254,9 +257,6 @@ export default function Billing() {
               </div>
             </li>
           ))}
-          {!loading && payments.length === 0 && (
-            <p className="text-sm text-slate-500">Sin pagos reportados.</p>
-          )}
         </ul>
       </section>
     </div>

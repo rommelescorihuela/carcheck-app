@@ -103,7 +103,7 @@ export default function Organizations() {
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Nombre de la organización"
-            className="flex-1 rounded border border-slate-300 px-3 py-2"
+            className="min-w-0 flex-1 rounded border border-slate-300 px-3 py-2"
             required
           />
           <button
