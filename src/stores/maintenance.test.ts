@@ -15,6 +15,7 @@ function makeRecord(overrides: Partial<MaintenanceRecord> = {}): MaintenanceReco
   return {
     id: 1,
     vehicle_id: 1,
+    recorded_by: null,
     maintenance_type_id: null,
     type: null,
     performed_on: '2026-01-01',

@@ -21,7 +21,7 @@ export interface ApiErrorBody {
   errors?: Record<string, string[]>
 }
 
-export type OrganizationRole = 'owner' | 'admin' | 'member'
+export type OrganizationRole = 'owner' | 'admin' | 'member' | 'driver'
 
 export interface Organization {
   id: number
@@ -114,6 +114,7 @@ export interface MaintenanceAttachment {
 export interface MaintenanceRecord {
   id: number
   vehicle_id: number
+  recorded_by: string | null
   maintenance_type_id: number | null
   type: MaintenanceType | null
   performed_on: string
@@ -150,6 +151,7 @@ export interface MaintenanceDue {
 export interface FuelEntry {
   id: number
   vehicle_id: number
+  recorded_by: string | null
   filled_on: string
   odometer_km: number
   liters: Decimal
@@ -403,6 +405,67 @@ export interface PushSubscriptionPayload {
   endpoint: string
   keys: { p256dh: string; auth: string }
   content_encoding: 'aes128gcm' | 'aesgcm'
+}
+
+export interface FleetAlert {
+  kind: 'document' | 'maintenance'
+  vehicle_id: number
+  vehicle: string
+  label: string
+  days_left: number | null
+}
+
+export interface FleetVehicleRow {
+  vehicle: {
+    id: number
+    make: string
+    model: string
+    plate: string | null
+    odometer_km: number
+  }
+  currency: string
+  fuel: { entries: number; cost: number }
+  maintenance: { records: number; cost: number }
+  total: number
+  documents: { expired: number; expiring: number }
+  maintenance_due: number
+  maintenance_soon: number
+}
+
+export interface FleetCurrencyTotal {
+  currency: string
+  liters?: number
+  cost?: number
+  avg_price?: number
+}
+
+export interface FleetSummary {
+  period: { from: string; to: string }
+  vehicles: {
+    total: number
+    with_expired_documents: number
+    with_due_maintenance: number
+    without_activity: number
+  }
+  totals: ExpenseRow[]
+  fuel: { entries: number; liters: number; costs: FleetCurrencyTotal[] }
+  maintenance: { records: number; costs: FleetCurrencyTotal[] }
+  documents: { total: number; expired: number; expiring: number }
+  alerts: FleetAlert[]
+  rows: FleetVehicleRow[]
+}
+
+export interface VehicleImportError {
+  line: number
+  message: string
+}
+
+export interface VehicleImportResult {
+  created: number
+  failed: number
+  limit: number | null
+  remaining: number | null
+  errors: VehicleImportError[]
 }
 
 export class ApiError extends Error {

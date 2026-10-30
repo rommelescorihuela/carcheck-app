@@ -15,6 +15,7 @@ function makeEntry(overrides: Partial<FuelEntry> = {}): FuelEntry {
   return {
     id: 1,
     vehicle_id: 1,
+    recorded_by: null,
     filled_on: '2026-01-01',
     odometer_km: 1000,
     liters: '40.00',

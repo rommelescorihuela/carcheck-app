@@ -1021,9 +1021,16 @@
 
 .lp-pricing-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
-  gap: 18px;
+  gap: 16px;
+}
+
+/* Cuatro planes no caben legibles por debajo de 1100px: pasan a dos columnas. */
+@media (max-width: 1100px) {
+  .lp-pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .lp-plan {

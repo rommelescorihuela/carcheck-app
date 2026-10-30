@@ -96,7 +96,7 @@ export default function MaintenanceDetail() {
         </p>
         {record.provider && (
           <p>
-            <span className="text-slate-500">Taller:</span> {record.provider}
+            <span className="text-slate-500">Proveedor:</span> {record.provider}
           </p>
         )}
         {record.notes && (

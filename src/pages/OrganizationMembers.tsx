@@ -4,6 +4,7 @@ import * as api from '../api/endpoints'
 import { ApiError, type Member, type OrganizationRole } from '../api/types'
 import { useAuth } from '../stores/auth'
 import { useOrganizations } from '../stores/organization'
+import { roleLabels } from '../lib/roles'
 
 export default function OrganizationMembers() {
   const { id } = useParams()
@@ -16,13 +17,14 @@ export default function OrganizationMembers() {
   const organization = organizations.find((item) => item.id === organizationId)
   const myRole: OrganizationRole | undefined = organization?.pivot?.role
   const canManage = myRole === 'owner' || myRole === 'admin'
+  const isOwner = myRole === 'owner'
 
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const [inviteEmail, setInviteEmail] = useState('')
-  const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member')
+  const [inviteRole, setInviteRole] = useState<'admin' | 'member' | 'driver'>('member')
   const [inviteMessage, setInviteMessage] = useState<string | null>(null)
   const [inviting, setInviting] = useState(false)
 
@@ -52,7 +54,7 @@ export default function OrganizationMembers() {
     }
   }, [organizationId, refresh])
 
-  async function changeRole(member: Member, role: 'admin' | 'member') {
+  async function changeRole(member: Member, role: 'admin' | 'member' | 'driver') {
     try {
       await api.updateMemberRole(organizationId, member.id, role)
       await refresh()
@@ -121,27 +123,40 @@ export default function OrganizationMembers() {
             <div className="flex items-center gap-3">
               {canManage && member.role !== 'owner' ? (
                 <>
-                  <select
-                    value={member.role}
-                    onChange={(event) =>
-                      void changeRole(member, event.target.value as 'admin' | 'member')
-                    }
-                    className="rounded border border-slate-300 px-2 py-1 text-sm"
-                  >
-                    <option value="member">member</option>
-                    <option value="admin">admin</option>
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => void remove(member)}
-                    className="text-sm text-red-600"
-                  >
-                    Quitar
-                  </button>
+                  {isOwner ? (
+                    <select
+                      value={member.role}
+                      onChange={(event) =>
+                        void changeRole(
+                          member,
+                          event.target.value as 'admin' | 'member' | 'driver',
+                        )
+                      }
+                      aria-label={`Rol de ${member.name}`}
+                      className="rounded border border-slate-300 px-2 py-1 text-sm"
+                    >
+                      <option value="driver">Conductor</option>
+                      <option value="member">Miembro</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  ) : (
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                      {roleLabels[member.role]}
+                    </span>
+                  )}
+                  {(isOwner || member.role !== 'admin') && (
+                    <button
+                      type="button"
+                      onClick={() => void remove(member)}
+                      className="text-sm text-red-600"
+                    >
+                      Quitar
+                    </button>
+                  )}
                 </>
               ) : (
                 <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                  {member.role}
+                  {roleLabels[member.role]}
                 </span>
               )}
             </div>
@@ -157,24 +172,27 @@ export default function OrganizationMembers() {
             <p className="rounded bg-slate-50 p-3 text-sm text-slate-700">{inviteMessage}</p>
           )}
 
-          <form onSubmit={invite} className="flex gap-2" noValidate>
+          <form onSubmit={invite} className="flex flex-wrap gap-2" noValidate>
             <input
               type="email"
               value={inviteEmail}
               onChange={(event) => setInviteEmail(event.target.value)}
               placeholder="Correo del invitado"
               aria-label="Correo del invitado"
-              className="flex-1 rounded border border-slate-300 px-3 py-2"
+              className="min-w-0 flex-1 basis-full rounded border border-slate-300 px-3 py-2 sm:basis-0"
               required
             />
             <select
               value={inviteRole}
-              onChange={(event) => setInviteRole(event.target.value as 'admin' | 'member')}
+              onChange={(event) =>
+                setInviteRole(event.target.value as 'admin' | 'member' | 'driver')
+              }
               aria-label="Rol del invitado"
               className="rounded border border-slate-300 px-2 py-2 text-sm"
             >
-              <option value="member">member</option>
-              <option value="admin">admin</option>
+              <option value="driver">Conductor</option>
+              <option value="member">Miembro</option>
+              {isOwner && <option value="admin">Administrador</option>}
             </select>
             <button
               type="submit"

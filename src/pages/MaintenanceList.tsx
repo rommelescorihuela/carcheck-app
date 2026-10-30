@@ -86,6 +86,9 @@ export default function MaintenanceList() {
                   {record.odometer_km.toLocaleString('es')} km ·{' '}
                   {record.total.toLocaleString('es')} {record.currency}
                 </p>
+                {record.recorded_by && (
+                  <p className="text-xs text-slate-500">Registrado por {record.recorded_by}</p>
+                )}
               </div>
               <Link
                 to={`/mantenimiento/${record.id}`}

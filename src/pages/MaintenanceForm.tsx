@@ -134,7 +134,7 @@ export default function MaintenanceForm({
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">Taller/proveedor</span>
+          <span className="text-sm font-medium text-slate-700">Proveedor</span>
           <input
             value={provider}
             onChange={(event) => setProvider(event.target.value)}

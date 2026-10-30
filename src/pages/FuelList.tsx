@@ -84,6 +84,9 @@ export default function FuelList() {
                   {entry.km_per_liter !== null && ` · ${number(entry.km_per_liter)} km/l`}
                   {!entry.full_tank && ' · carga parcial'}
                 </p>
+                {entry.recorded_by && (
+                  <p className="text-xs text-slate-500">Registrado por {entry.recorded_by}</p>
+                )}
               </div>
               <span className="text-sm text-slate-500">{entry.station ?? ''}</span>
             </li>

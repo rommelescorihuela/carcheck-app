@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { ApiError } from '../api/types'
+import { roleLabel } from '../lib/roles'
 import { useOrganizations } from '../stores/organization'
 
 export default function Organizations() {
@@ -74,7 +75,7 @@ export default function Organizations() {
               <span className="font-medium text-slate-800">{organization.name}</span>
               {organization.pivot && (
                 <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                  {organization.pivot.role}
+                  {roleLabel(organization.pivot.role)}
                 </span>
               )}
             </label>

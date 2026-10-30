@@ -369,7 +369,7 @@ export default function Home() {
                     <h3>Registra lo que pasa</h3>
                     <p>
                       Cambios de aceite, frenos, alineación, cargas de combustible, seguros y
-                      documentos. Con taller, costo y comprobante si los tienes.
+                      documentos. Con proveedor, costo y comprobante si los tienes.
                     </p>
                   </div>
                 </li>
@@ -399,7 +399,7 @@ export default function Home() {
               </h2>
               <p className="lp-product-lede">
                 Sabes qué está vencido, qué viene pronto y qué ya resolviste. Sin buscar entre
-                correos ni preguntar en el taller.
+                correos ni hojas de cálculo.
               </p>
             </div>
 
@@ -475,12 +475,13 @@ export default function Home() {
                 loading="lazy"
               />
               <div className="lp-fleet-body">
-                <span className="lp-kicker lp-kicker-invert">Para talleres y familias</span>
+                <span className="lp-kicker lp-kicker-invert">Para flotas y familias</span>
                 <h2 id="flotas-titulo">Un garaje compartido, sin perder el detalle.</h2>
                 <p>
-                  Crea una organización, invita a tus mecánicos o a tu familia y trabajen sobre
-                  el mismo historial. Cada movimiento queda registrado y cada vehículo conserva
-                  su dueño y sus fechas.
+                  Crea una flota, invita a tus conductores y trabajen sobre el mismo historial.
+                  Cada carga y cada servicio queda registrado con quién lo hizo, y cada vehículo
+                  conserva su dueño y sus fechas. Carga decenas de vehículos desde un CSV y mira
+                  el gasto de toda la flota en una pantalla.
                 </p>
                 <Link to="/register" className="lp-btn lp-btn-light">
                   Probar con mi equipo
@@ -499,7 +500,7 @@ export default function Home() {
               <div>
                 <span className="lp-kicker">Precios</span>
                 <h2>
-                  Un plan para cada <span className="lp-serif">garaje</span>.
+                  Un plan para cada <span className="lp-serif">garaje</span> y cada flota.
                 </h2>
               </div>
               <p>
@@ -537,8 +538,7 @@ export default function Home() {
                 </div>
               </article>
 
-              <article className="lp-plan lp-plan-featured" data-reveal>
-                <span className="lp-plan-tag">Para familias</span>
+              <article className="lp-plan d2" data-reveal>
                 <h3 className="lp-plan-name">Familiar</h3>
                 <p className="lp-plan-desc">
                   Hasta 5 vehículos compartidos con tu organización.
@@ -568,32 +568,63 @@ export default function Home() {
                 </div>
               </article>
 
-              <article className="lp-plan d2" data-reveal>
-                <h3 className="lp-plan-name">Taller</h3>
+              <article className="lp-plan lp-plan-featured" data-reveal>
+                <span className="lp-plan-tag">Para flotas</span>
+                <h3 className="lp-plan-name">Flota</h3>
                 <p className="lp-plan-desc">
-                  Vehículos y miembros sin límite para talleres.
+                  Hasta 25 vehículos y 10 personas, con conductores y reportes.
                 </p>
                 <p className="lp-price">
-                  <span className="lp-price-value">$19.99</span>
+                  <span className="lp-price-value">$29.99</span>
                   <span className="lp-price-period">/ mes</span>
                 </p>
                 <ul className="lp-plan-list">
                   <li>
-                    <CheckIcon /> Vehículos ilimitados
+                    <CheckIcon /> Hasta 25 vehículos
                   </li>
                   <li>
-                    <CheckIcon /> Miembros ilimitados
+                    <CheckIcon /> Hasta 10 personas, conductores incluidos
                   </li>
                   <li>
-                    <CheckIcon /> Todo lo del plan Familiar
+                    <CheckIcon /> Alta masiva desde CSV
                   </li>
                   <li>
-                    <CheckIcon /> Historial por cliente y por vehículo
+                    <CheckIcon /> Vista consolidada y todo lo del plan Familiar
+                  </li>
+                </ul>
+                <div className="lp-plan-cta">
+                  <Link to="/register" className="lp-btn lp-btn-primary">
+                    Empezar con Flota
+                  </Link>
+                </div>
+              </article>
+
+              <article className="lp-plan d3" data-reveal>
+                <h3 className="lp-plan-name">Empresa</h3>
+                <p className="lp-plan-desc">
+                  Hasta 75 vehículos y 25 personas para operaciones grandes.
+                </p>
+                <p className="lp-price">
+                  <span className="lp-price-value">$59.99</span>
+                  <span className="lp-price-period">/ mes</span>
+                </p>
+                <ul className="lp-plan-list">
+                  <li>
+                    <CheckIcon /> Hasta 75 vehículos
+                  </li>
+                  <li>
+                    <CheckIcon /> Hasta 25 personas en la organización
+                  </li>
+                  <li>
+                    <CheckIcon /> Todo lo del plan Flota
+                  </li>
+                  <li>
+                    <CheckIcon /> Atención prioritaria por correo
                   </li>
                 </ul>
                 <div className="lp-plan-cta">
                   <Link to="/register" className="lp-btn lp-btn-ghost">
-                    Empezar con Taller
+                    Empezar con Empresa
                   </Link>
                 </div>
               </article>
@@ -632,18 +663,41 @@ export default function Home() {
                   <span className="lp-faq-plus" aria-hidden="true" />
                 </summary>
                 <p className="lp-faq-answer">
-                  Sí. El plan Básico incluye uno, Familiar hasta cinco y Taller no tiene límite.
+                  Sí. Básico incluye uno, Familiar hasta cinco, Flota hasta 25 y Empresa hasta 75.
                   Cada vehículo mantiene su propio historial, sus documentos y sus recordatorios.
                 </p>
               </details>
               <details className="lp-faq-item">
                 <summary>
-                  ¿Sirve si comparto el carro con mi familia o taller?
+                  ¿Puedo cargar mi flota de una vez?
                   <span className="lp-faq-plus" aria-hidden="true" />
                 </summary>
                 <p className="lp-faq-answer">
-                  Sí. Puedes crear una organización e invitar miembros por correo. Todos ven y
-                  actualizan el mismo historial, y tú mantienes el control de quién entra.
+                  Sí. Sube un CSV con marca y modelo —y opcionalmente año, placa, VIN, combustible
+                  y kilometraje— y CarCheck crea los vehículos de una vez, respetando el límite de
+                  tu plan y diciéndote qué filas quedaron fuera y por qué.
+                </p>
+              </details>
+              <details className="lp-faq-item">
+                <summary>
+                  ¿Qué puede hacer un conductor?
+                  <span className="lp-faq-plus" aria-hidden="true" />
+                </summary>
+                <p className="lp-faq-answer">
+                  Registrar combustible y mantenimiento desde su teléfono, con su nombre en cada
+                  registro. No puede dar de alta vehículos, invitar gente ni tocar la facturación:
+                  eso queda en manos del propietario y los administradores.
+                </p>
+              </details>
+              <details className="lp-faq-item">
+                <summary>
+                  ¿Sirve si comparto el carro con mi familia o con mi flota?
+                  <span className="lp-faq-plus" aria-hidden="true" />
+                </summary>
+                <p className="lp-faq-answer">
+                  Sí. Puedes crear una organización e invitar miembros y conductores por correo.
+                  Todos ven y actualizan el mismo historial, y tú mantienes el control de quién
+                  entra y con qué rol.
                 </p>
               </details>
               <details className="lp-faq-item">

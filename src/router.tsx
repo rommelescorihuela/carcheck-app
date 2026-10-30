@@ -5,6 +5,7 @@ import RootLayout from './components/RootLayout'
 import AcceptInvitation from './pages/AcceptInvitation'
 import Billing from './pages/Billing'
 import DocumentsList from './pages/DocumentsList'
+import Fleet from './pages/Fleet'
 import FuelList from './pages/FuelList'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -37,6 +38,7 @@ export const routes: RouteObject[] = [
             children: [
               { path: '/organizaciones', element: <Organizations /> },
               { path: '/organizaciones/:id', element: <OrganizationMembers /> },
+              { path: '/flota', element: <Fleet /> },
               { path: '/vehiculos', element: <Vehicles /> },
               { path: '/facturacion', element: <Billing /> },
               { path: '/notificaciones', element: <Notifications /> },

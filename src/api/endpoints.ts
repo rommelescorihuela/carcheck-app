@@ -7,6 +7,7 @@ import type {
   BillingPayment,
   DocumentsSummary,
   ExpenseReport,
+  FleetSummary,
   FuelEntry,
   FuelSummary,
   FuelType,
@@ -31,6 +32,7 @@ import type {
   User,
   Vehicle,
   VehicleDocument,
+  VehicleImportResult,
   VehicleType,
 } from './types'
 
@@ -191,6 +193,36 @@ export function exportExpenseReport(params: ReportParams = {}): Promise<Download
   return download(`/reports/expenses/export${reportQuery(params)}`)
 }
 
+export interface FleetParams {
+  organizationId?: number | null
+  from?: string
+  to?: string
+}
+
+function fleetQuery(params: FleetParams = {}): string {
+  const search = new URLSearchParams()
+
+  if (params.organizationId != null) {
+    search.set('organization_id', String(params.organizationId))
+  }
+  if (params.from) {
+    search.set('from', params.from)
+  }
+  if (params.to) {
+    search.set('to', params.to)
+  }
+
+  const query = search.toString()
+
+  return query ? `?${query}` : ''
+}
+
+export async function fleetSummary(params: FleetParams = {}): Promise<FleetSummary> {
+  const data = await request<{ data: FleetSummary }>(`/fleet/summary${fleetQuery(params)}`)
+
+  return data.data
+}
+
 export interface ReminderListParams {
   organizationId?: number | null
   scope?: 'personal'
@@ -266,6 +298,25 @@ export async function updateVehicle(id: number, payload: VehiclePayload): Promis
 
 export async function deleteVehicle(id: number): Promise<void> {
   await request(`/vehicles/${id}`, { method: 'DELETE' })
+}
+
+export async function importVehicles(
+  file: File,
+  organizationId?: number | null,
+): Promise<VehicleImportResult> {
+  const form = new FormData()
+  form.append('file', file)
+
+  if (organizationId != null) {
+    form.append('organization_id', String(organizationId))
+  }
+
+  const data = await request<{ data: VehicleImportResult }>('/vehicles/import', {
+    method: 'POST',
+    body: form,
+  })
+
+  return data.data
 }
 
 export async function uploadVehiclePhoto(id: number, file: File): Promise<Vehicle> {

@@ -11,8 +11,8 @@ import { useOrganizations } from './organization'
 
 const organization: Organization = {
   id: 1,
-  name: 'Taller Central',
-  slug: 'taller-central',
+  name: 'Flota Central',
+  slug: 'flota-central',
   owner_id: 1,
   currency: 'USD',
   timezone: 'America/Caracas',
@@ -46,7 +46,7 @@ describe('organization store', () => {
     vi.mocked(api.createOrganization).mockResolvedValueOnce(organization)
     vi.mocked(api.listOrganizations).mockResolvedValueOnce([organization])
 
-    await useOrganizations.getState().create('Taller Central')
+    await useOrganizations.getState().create('Flota Central')
 
     expect(useOrganizations.getState().activeId).toBe(1)
     expect(useOrganizations.getState().organizations).toHaveLength(1)

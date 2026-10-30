@@ -40,6 +40,14 @@ export default function AppShell() {
               Organizaciones
             </NavLink>
             <NavLink
+              to="/flota"
+              className={({ isActive }) =>
+                `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
+              }
+            >
+              Flota
+            </NavLink>
+            <NavLink
               to="/vehiculos"
               className={({ isActive }) =>
                 `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
