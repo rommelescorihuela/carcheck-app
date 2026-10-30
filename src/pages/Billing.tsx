@@ -6,8 +6,8 @@ import { useOrganizations } from '../stores/organization'
 import PaymentForm from './PaymentForm'
 
 const STATUS_CLASS: Record<EffectiveSubscriptionStatus, string> = {
-  trialing: 'bg-teal-50 text-teal-700',
-  active: 'bg-teal-50 text-teal-700',
+  trialing: 'bg-brand-50 text-brand-700',
+  active: 'bg-brand-50 text-brand-700',
   pending_payment: 'bg-amber-50 text-amber-700',
   canceled: 'bg-slate-100 text-slate-700',
   expired: 'bg-red-50 text-red-700',
@@ -15,7 +15,7 @@ const STATUS_CLASS: Record<EffectiveSubscriptionStatus, string> = {
 
 const PAYMENT_CLASS: Record<BillingPayment['status'], string> = {
   pending: 'bg-amber-50 text-amber-700',
-  approved: 'bg-teal-50 text-teal-700',
+  approved: 'bg-brand-50 text-brand-700',
   rejected: 'bg-red-50 text-red-700',
 }
 
@@ -174,7 +174,7 @@ export default function Billing() {
               <div
                 key={plan.id}
                 className={`rounded border bg-white p-4 ${
-                  current ? 'border-teal-600' : 'border-slate-200'
+                  current ? 'border-brand-600' : 'border-slate-200'
                 }`}
               >
                 <p className="font-semibold text-slate-900">{plan.name}</p>
@@ -190,7 +190,7 @@ export default function Billing() {
                     aria-label={`Elegir plan ${plan.name}`}
                     disabled={current}
                     onClick={() => void handleChoose(plan.id)}
-                    className="mt-3 w-full rounded bg-teal-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+                    className="mt-3 w-full rounded bg-brand-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
                   >
                     {current ? 'Plan actual' : subscription?.has_access ? 'Cambiar a este plan' : 'Elegir'}
                   </button>
@@ -241,7 +241,7 @@ export default function Billing() {
                     href={payment.proof.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-sm text-teal-700"
+                    className="text-sm text-brand-700"
                   >
                     Comprobante
                   </a>

@@ -78,7 +78,7 @@ export default function MaintenanceDetail() {
         </h1>
         <Link
           to={`/vehiculos/${record.vehicle_id}/mantenimiento`}
-          className="text-sm font-medium text-teal-700"
+          className="text-sm font-medium text-brand-700"
         >
           Volver
         </Link>
@@ -143,7 +143,7 @@ export default function MaintenanceDetail() {
         <ul className="space-y-1 text-sm">
           {record.attachments.map((file) => (
             <li key={file.id} className="flex items-center justify-between">
-              <a href={file.url} target="_blank" rel="noreferrer" className="text-teal-700">
+              <a href={file.url} target="_blank" rel="noreferrer" className="text-brand-700">
                 {file.file_name}
               </a>
               <button

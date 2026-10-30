@@ -222,7 +222,7 @@ export default function MaintenanceForm({
         <button
           type="button"
           onClick={() => setItems((rows) => [...rows, emptyRow()])}
-          className="text-sm font-medium text-teal-700"
+          className="text-sm font-medium text-brand-700"
         >
           + Añadir ítem
         </button>
@@ -231,7 +231,7 @@ export default function MaintenanceForm({
       <button
         type="submit"
         disabled={submitting}
-        className="rounded bg-teal-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+        className="rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
       >
         {submitting ? 'Guardando…' : submitLabel}
       </button>

@@ -57,7 +57,7 @@ export default function Vehicles() {
                 {vehicle.plate ?? 'Sin placa'} · {vehicle.odometer_km.toLocaleString('es')} km
               </p>
             </div>
-            <Link to={`/vehiculos/${vehicle.id}`} className="text-sm font-medium text-teal-700">
+            <Link to={`/vehiculos/${vehicle.id}`} className="text-sm font-medium text-brand-700">
               Ver
             </Link>
           </li>

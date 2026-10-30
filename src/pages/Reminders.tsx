@@ -151,14 +151,14 @@ export default function Reminders() {
           type="button"
           onClick={() => void handleSync()}
           disabled={syncing}
-          className="rounded bg-teal-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="rounded bg-brand-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
         >
           {syncing ? 'Comprobando…' : 'Comprobar ahora'}
         </button>
       </div>
 
       {message && (
-        <p className="rounded bg-teal-50 p-3 text-sm text-teal-800" role="status">
+        <p className="rounded bg-brand-50 p-3 text-sm text-brand-800" role="status">
           {message}
         </p>
       )}

@@ -6,10 +6,10 @@ import { useNotifications } from '../stores/notifications'
 
 const CATEGORY_CLASS: Record<AppNotification['category'], string> = {
   system: 'bg-slate-100 text-slate-700',
-  billing: 'bg-sky-50 text-sky-700',
+  billing: 'bg-brand-50 text-brand-700',
   maintenance: 'bg-amber-50 text-amber-700',
   documents: 'bg-violet-50 text-violet-700',
-  reminders: 'bg-teal-50 text-teal-700',
+  reminders: 'bg-brand-50 text-brand-700',
 }
 
 const CHANNELS: { key: 'in_app' | 'email' | 'push'; label: string }[] = [
@@ -213,7 +213,7 @@ export default function Notifications() {
           <button
             type="button"
             onClick={() => void handleTest()}
-            className="rounded bg-teal-700 px-3 py-2 text-sm font-medium text-white"
+            className="rounded bg-brand-700 px-3 py-2 text-sm font-medium text-white"
           >
             Enviar notificación de prueba
           </button>
@@ -221,7 +221,7 @@ export default function Notifications() {
       </div>
 
       {message && (
-        <p className="rounded bg-teal-50 p-3 text-sm text-teal-800" role="status">
+        <p className="rounded bg-brand-50 p-3 text-sm text-brand-800" role="status">
           {message}
         </p>
       )}
@@ -250,7 +250,7 @@ export default function Notifications() {
             type="button"
             onClick={() => void handlePushToggle()}
             disabled={pushBusy}
-            className="rounded border border-teal-700 px-3 py-2 text-sm font-medium text-teal-700 disabled:opacity-60"
+            className="rounded border border-brand-700 px-3 py-2 text-sm font-medium text-brand-700 disabled:opacity-60"
           >
             {pushEnabled ? 'Desactivar push en este dispositivo' : 'Activar push en este dispositivo'}
           </button>
@@ -267,7 +267,7 @@ export default function Notifications() {
             <li
               key={notification.id}
               className={`rounded border bg-white p-3 ${
-                notification.read_at === null ? 'border-teal-300' : 'border-slate-200'
+                notification.read_at === null ? 'border-brand-300' : 'border-slate-200'
               }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
@@ -276,7 +276,7 @@ export default function Notifications() {
                     {notification.read_at === null && (
                       <span
                         aria-label="Sin leer"
-                        className="inline-block h-2 w-2 rounded-full bg-teal-600"
+                        className="inline-block h-2 w-2 rounded-full bg-brand-600"
                       />
                     )}
                     {notification.title}
@@ -298,13 +298,13 @@ export default function Notifications() {
                   <button
                     type="button"
                     onClick={() => void handleMarkRead(notification.id)}
-                    className="text-teal-700"
+                    className="text-brand-700"
                   >
                     Marcar leído
                   </button>
                 )}
                 {notification.url && (
-                  <a href={notification.url} className="text-teal-700">
+                  <a href={notification.url} className="text-brand-700">
                     Ver
                   </a>
                 )}
@@ -357,7 +357,7 @@ export default function Notifications() {
                         onChange={(event) =>
                           changePreference(preference.category, channel.key, event.target.checked)
                         }
-                        className="h-4 w-4 accent-teal-700"
+                        className="h-4 w-4 accent-brand-700"
                       />
                     </td>
                   ))}
@@ -370,7 +370,7 @@ export default function Notifications() {
         <button
           type="button"
           onClick={() => void handleSavePreferences()}
-          className="rounded bg-teal-700 px-4 py-2 text-sm font-medium text-white"
+          className="rounded bg-brand-700 px-4 py-2 text-sm font-medium text-white"
         >
           Guardar preferencias
         </button>

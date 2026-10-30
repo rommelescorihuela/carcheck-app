@@ -158,7 +158,7 @@ export default function Reports() {
           type="button"
           onClick={() => void exportCsv(params)}
           disabled={!hasData || loading || exporting}
-          className="rounded border border-teal-700 px-3 py-2 text-sm font-medium text-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded border border-brand-700 px-3 py-2 text-sm font-medium text-brand-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {exporting ? 'Exportando…' : 'Exportar CSV'}
         </button>
@@ -185,7 +185,7 @@ export default function Reports() {
         </label>
         <button
           type="submit"
-          className="rounded bg-teal-700 px-3 py-2 text-sm font-medium text-white"
+          className="rounded bg-brand-700 px-3 py-2 text-sm font-medium text-white"
         >
           Aplicar
         </button>

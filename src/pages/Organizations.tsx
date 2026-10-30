@@ -80,7 +80,7 @@ export default function Organizations() {
             </label>
             <Link
               to={`/organizaciones/${organization.id}`}
-              className="text-sm font-medium text-teal-700"
+              className="text-sm font-medium text-brand-700"
             >
               Ver miembros
             </Link>
@@ -109,7 +109,7 @@ export default function Organizations() {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded bg-teal-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+            className="rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
           >
             {submitting ? 'Creando…' : 'Crear'}
           </button>

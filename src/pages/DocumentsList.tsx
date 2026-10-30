@@ -12,7 +12,7 @@ const STATUS_LABEL: Record<DocumentStatusValue, string> = {
 }
 
 const STATUS_CLASS: Record<DocumentStatusValue, string> = {
-  valid: 'bg-teal-50 text-teal-700',
+  valid: 'bg-brand-50 text-brand-700',
   expiring: 'bg-amber-50 text-amber-700',
   expired: 'bg-red-50 text-red-700',
 }
@@ -71,7 +71,7 @@ export default function DocumentsList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">Documentos</h1>
-        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-teal-700">
+        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-brand-700">
           Volver al vehículo
         </Link>
       </div>
@@ -85,7 +85,7 @@ export default function DocumentsList() {
             </div>
             <div className="rounded border border-slate-200 bg-white p-3">
               <p className="text-xs uppercase tracking-wide text-slate-500">Vigentes</p>
-              <p className="text-lg font-semibold text-teal-700">{summary.valid}</p>
+              <p className="text-lg font-semibold text-brand-700">{summary.valid}</p>
             </div>
             <div className="rounded border border-slate-200 bg-white p-3">
               <p className="text-xs uppercase tracking-wide text-slate-500">Por vencer</p>
@@ -141,7 +141,7 @@ export default function DocumentsList() {
                       href={document.file.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-teal-700"
+                      className="text-brand-700"
                     >
                       {document.file.file_name}
                     </a>
@@ -156,7 +156,7 @@ export default function DocumentsList() {
                 ) : (
                   <span className="text-slate-500">Sin archivo.</span>
                 )}
-                <label className="cursor-pointer text-teal-700">
+                <label className="cursor-pointer text-brand-700">
                   {document.file ? 'Reemplazar archivo' : 'Subir archivo'}
                   <input
                     type="file"

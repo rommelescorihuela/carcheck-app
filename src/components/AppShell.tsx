@@ -23,13 +23,13 @@ export default function AppShell() {
     <div className="min-h-svh bg-slate-50">
       <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
         <div className="flex items-center gap-4">
-          <Link to="/" className="font-semibold text-teal-700">
+          <Link to="/" className="font-semibold text-brand-700">
             CarCheck
           </Link>
           <NavLink
             to="/organizaciones"
             className={({ isActive }) =>
-              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Organizaciones
@@ -37,7 +37,7 @@ export default function AppShell() {
           <NavLink
             to="/vehiculos"
             className={({ isActive }) =>
-              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Vehículos
@@ -45,7 +45,7 @@ export default function AppShell() {
           <NavLink
             to="/facturacion"
             className={({ isActive }) =>
-              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Facturación
@@ -53,7 +53,7 @@ export default function AppShell() {
           <NavLink
             to="/recordatorios"
             className={({ isActive }) =>
-              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Recordatorios
@@ -61,7 +61,7 @@ export default function AppShell() {
           <NavLink
             to="/reportes"
             className={({ isActive }) =>
-              `text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Reportes
@@ -69,12 +69,12 @@ export default function AppShell() {
           <NavLink
             to="/notificaciones"
             className={({ isActive }) =>
-              `flex items-center gap-1 text-sm ${isActive ? 'font-medium text-teal-700' : 'text-slate-600'}`
+              `flex items-center gap-1 text-sm ${isActive ? 'font-medium text-brand-700' : 'text-slate-600'}`
             }
           >
             Notificaciones
             {unreadCount > 0 && (
-              <span className="rounded-full bg-teal-700 px-1.5 py-0.5 text-xs font-medium text-white">
+              <span className="rounded-full bg-brand-700 px-1.5 py-0.5 text-xs font-medium text-white">
                 {unreadCount}
               </span>
             )}

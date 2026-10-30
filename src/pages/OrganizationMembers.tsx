@@ -94,7 +94,7 @@ export default function OrganizationMembers() {
         <h1 className="text-2xl font-bold text-slate-900">
           {organization?.name ?? 'Organización'}
         </h1>
-        <Link to="/organizaciones" className="text-sm font-medium text-teal-700">
+        <Link to="/organizaciones" className="text-sm font-medium text-brand-700">
           Volver
         </Link>
       </div>
@@ -179,7 +179,7 @@ export default function OrganizationMembers() {
             <button
               type="submit"
               disabled={inviting}
-              className="rounded bg-teal-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+              className="rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
             >
               {inviting ? 'Enviando…' : 'Invitar'}
             </button>

@@ -119,7 +119,7 @@ export default function VehicleDetail() {
   if (!vehicle) {
     return (
       <div className="space-y-3">
-        <Link to="/vehiculos" className="text-sm font-medium text-teal-700">
+        <Link to="/vehiculos" className="text-sm font-medium text-brand-700">
           Volver
         </Link>
         {error ? (
@@ -145,7 +145,7 @@ export default function VehicleDetail() {
         <h1 className="text-2xl font-bold text-slate-900">
           {vehicle.make} {vehicle.model}
         </h1>
-        <Link to="/vehiculos" className="text-sm font-medium text-teal-700">
+        <Link to="/vehiculos" className="text-sm font-medium text-brand-700">
           Volver
         </Link>
       </div>
@@ -153,19 +153,19 @@ export default function VehicleDetail() {
       <div className="flex gap-4">
         <Link
           to={`/vehiculos/${vehicleId}/mantenimiento`}
-          className="inline-block text-sm font-medium text-teal-700"
+          className="inline-block text-sm font-medium text-brand-700"
         >
           Ver mantenimiento
         </Link>
         <Link
           to={`/vehiculos/${vehicleId}/combustible`}
-          className="inline-block text-sm font-medium text-teal-700"
+          className="inline-block text-sm font-medium text-brand-700"
         >
           Ver combustible
         </Link>
         <Link
           to={`/vehiculos/${vehicleId}/documentos`}
-          className="inline-block text-sm font-medium text-teal-700"
+          className="inline-block text-sm font-medium text-brand-700"
         >
           Ver documentos
         </Link>
@@ -225,7 +225,7 @@ export default function VehicleDetail() {
               type="button"
               onClick={() => void handleOdometer()}
               disabled={busy}
-              className="rounded bg-teal-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+              className="rounded bg-brand-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
             >
               Guardar
             </button>
@@ -255,7 +255,7 @@ export default function VehicleDetail() {
               type="button"
               onClick={() => void handleTransfer()}
               disabled={busy}
-              className="rounded border border-teal-700 px-3 py-2 text-sm font-medium text-teal-700 disabled:opacity-60"
+              className="rounded border border-brand-700 px-3 py-2 text-sm font-medium text-brand-700 disabled:opacity-60"
             >
               Traspasar
             </button>

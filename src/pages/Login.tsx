@@ -72,7 +72,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded bg-teal-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+          className="w-full rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
         >
           {submitting ? 'Entrando…' : 'Entrar'}
         </button>
@@ -80,7 +80,7 @@ export default function Login() {
 
       <p className="text-sm text-slate-600">
         ¿No tienes cuenta?{' '}
-        <Link to="/register" className="font-medium text-teal-700">
+        <Link to="/register" className="font-medium text-brand-700">
           Crear una
         </Link>
       </p>

@@ -34,7 +34,7 @@ export default function FuelList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">Combustible</h1>
-        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-teal-700">
+        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-brand-700">
           Volver al vehículo
         </Link>
       </div>

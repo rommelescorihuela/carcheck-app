@@ -46,7 +46,7 @@ export default function AcceptInvitation() {
         <div className="space-y-3">
           <h1 className="text-xl font-semibold text-slate-900">Invitación a CarCheck</h1>
           <p className="text-slate-600">Inicia sesión con el correo invitado para aceptarla.</p>
-          <Link to="/login" className="inline-block rounded bg-teal-700 px-4 py-2 text-white">
+          <Link to="/login" className="inline-block rounded bg-brand-700 px-4 py-2 text-white">
             Iniciar sesión
           </Link>
         </div>
@@ -62,7 +62,7 @@ export default function AcceptInvitation() {
         {state === 'done' && (
           <Link
             to="/organizaciones"
-            className="inline-block rounded bg-teal-700 px-4 py-2 text-white"
+            className="inline-block rounded bg-brand-700 px-4 py-2 text-white"
           >
             Ver mis organizaciones
           </Link>

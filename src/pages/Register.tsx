@@ -104,7 +104,7 @@ export default function Register() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded bg-teal-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+          className="w-full rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
         >
           {submitting ? 'Creando…' : 'Crear cuenta'}
         </button>
@@ -112,7 +112,7 @@ export default function Register() {
 
       <p className="text-sm text-slate-600">
         ¿Ya tienes cuenta?{' '}
-        <Link to="/login" className="font-medium text-teal-700">
+        <Link to="/login" className="font-medium text-brand-700">
           Iniciar sesión
         </Link>
       </p>

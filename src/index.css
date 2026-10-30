@@ -16,6 +16,20 @@
   font-display: swap;
 }
 
+/* Azul de marca de CarCheck: el mismo que usa la landing (--brand en landing.css). */
+@theme {
+  --color-brand-50: #eef3f8;
+  --color-brand-100: #dce6ef;
+  --color-brand-200: #c3d6e6;
+  --color-brand-300: #a8c4da;
+  --color-brand-400: #7ba5c8;
+  --color-brand-500: #4b81ad;
+  --color-brand-600: #2c6291;
+  --color-brand-700: #1d4a70;
+  --color-brand-800: #163a58;
+  --color-brand-900: #123653;
+}
+
 :root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);

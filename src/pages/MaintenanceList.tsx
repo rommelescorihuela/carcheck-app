@@ -6,7 +6,7 @@ import { useMaintenance } from '../stores/maintenance'
 import MaintenanceForm from './MaintenanceForm'
 
 const STATUS_CLASS: Record<MaintenanceDue['status'], string> = {
-  ok: 'text-teal-700',
+  ok: 'text-brand-700',
   soon: 'text-amber-600',
   due: 'text-red-600',
 }
@@ -42,7 +42,7 @@ export default function MaintenanceList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">Mantenimiento</h1>
-        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-teal-700">
+        <Link to={`/vehiculos/${id}`} className="text-sm font-medium text-brand-700">
           Volver al vehículo
         </Link>
       </div>
@@ -89,7 +89,7 @@ export default function MaintenanceList() {
               </div>
               <Link
                 to={`/mantenimiento/${record.id}`}
-                className="text-sm font-medium text-teal-700"
+                className="text-sm font-medium text-brand-700"
               >
                 Ver
               </Link>
