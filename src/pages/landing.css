@@ -10,10 +10,11 @@
   --muted: #59626b;
   --line: #dde1e5;
   --line-invert: rgb(246 247 248 / 0.14);
-  --brand: #1d4a70;
-  --brand-deep: #123653;
-  --brand-soft: #dce6ef;
-  --brand-light: #a8c4da;
+  /* Misma escala que la app: @theme en src/index.css. */
+  --brand: var(--color-brand-700);
+  --brand-deep: var(--color-brand-900);
+  --brand-soft: var(--color-brand-100);
+  --brand-light: var(--color-brand-300);
   --signal: #c03a2b;
   --signal-light: #eda595;
   --ok: #2f8f65;
