@@ -25,6 +25,17 @@
       content="Mantenimientos, combustible, documentos y recordatorios de tu vehículo en un solo lugar. 14 días de prueba gratis."
     />
     <title>CarCheck — El historial de tu carro, en orden</title>
+    <script>
+      // La foto del hero es el LCP de la landing: se descubre antes de que React monte.
+      if (window.location.pathname === '/') {
+        var hero = document.createElement('link')
+        hero.rel = 'preload'
+        hero.as = 'image'
+        hero.href = '/images/hero-driving.webp'
+        hero.setAttribute('fetchpriority', 'high')
+        document.head.appendChild(hero)
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../stores/auth'
 import './landing.css'
@@ -16,11 +18,99 @@ function CheckIcon() {
   )
 }
 
+const SHOTS = [
+  {
+    id: 'recordatorios',
+    label: 'Recordatorios',
+    detail: 'Lo que vence y lo que viene, ordenado por fecha.',
+    src: '/images/app-reminders.png',
+    alt: 'Pantalla de recordatorios de CarCheck con avisos vencidos y próximos',
+    caption: 'Recordatorios · Toyota Corolla',
+  },
+  {
+    id: 'documentos',
+    label: 'Documentos',
+    detail: 'Seguro, revisión e impuestos con su estado real.',
+    src: '/images/app-documents.png',
+    alt: 'Pantalla de documentos del vehículo con totales, por vencer y vencidos',
+    caption: 'Documentos · Toyota Corolla',
+  },
+  {
+    id: 'reportes',
+    label: 'Reportes',
+    detail: 'Cuánto gastaste por vehículo, por mes y por concepto.',
+    src: '/images/app-reports.png',
+    alt: 'Pantalla de reportes de gasto por vehículo con totales del periodo',
+    caption: 'Reportes · Año en curso',
+  },
+]
+
+const SERVICES = [
+  'Cambio de aceite',
+  'Frenos',
+  'Seguro',
+  'Revisión',
+  'Neumáticos',
+  'Combustible',
+  'Impuestos',
+  'Documentos',
+]
+
 export default function Home() {
   const authenticated = useAuth((state) => state.status === 'authenticated')
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const [activeShot, setActiveShot] = useState(0)
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const nodes = Array.from(root.querySelectorAll<HTMLElement>('[data-reveal]'))
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduced || typeof IntersectionObserver === 'undefined') {
+      nodes.forEach((node) => node.classList.add('is-in'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-in')
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.15 },
+    )
+
+    nodes.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [])
+
+  function onTabKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const last = SHOTS.length - 1
+    let next: number | null = null
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      next = activeShot === last ? 0 : activeShot + 1
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      next = activeShot === 0 ? last : activeShot - 1
+    } else if (event.key === 'Home') {
+      next = 0
+    } else if (event.key === 'End') {
+      next = last
+    }
+
+    if (next === null) return
+    event.preventDefault()
+    setActiveShot(next)
+    tabRefs.current[next]?.focus()
+  }
 
   return (
-    <div className="lp">
+    <div className="lp" ref={rootRef}>
       <a className="lp-skip" href="#contenido">
         Saltar al contenido
       </a>
@@ -86,11 +176,11 @@ export default function Home() {
 
       <main id="contenido">
         <section className="lp-hero">
-          <div className="lp-shell lp-hero-grid">
+          <div className="lp-shell lp-hero-inner">
             <div className="lp-hero-copy">
               <p className="lp-eyebrow">Mantenimiento de vehículos</p>
               <h1>
-                Tu carro, <span className="lp-serif">en orden</span>.
+                Tu carro, <em className="lp-serif">en orden</em>.
               </h1>
               <p className="lp-lede">
                 Mantenimientos, combustible, documentos y gastos en un solo lugar. Con
@@ -108,20 +198,6 @@ export default function Home() {
                 </a>
               </div>
               <p className="lp-hero-note">14 días de prueba. Sin tarjeta de crédito.</p>
-              <ul className="lp-hero-stats">
-                <li>
-                  <span className="lp-stat-value">Todo</span>
-                  <span className="lp-stat-label">el historial en un lugar</span>
-                </li>
-                <li>
-                  <span className="lp-stat-value">Antes</span>
-                  <span className="lp-stat-label">de que venza cada papel</span>
-                </li>
-                <li>
-                  <span className="lp-stat-value">$3.99</span>
-                  <span className="lp-stat-label">al mes, desde</span>
-                </li>
-              </ul>
             </div>
 
             <div className="lp-hero-visual">
@@ -164,79 +240,104 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
 
-        <section className="lp-trust" aria-label="Qué resuelve CarCheck">
-          <div className="lp-shell lp-trust-grid">
-            <div className="lp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <circle cx="10" cy="10" r="7.2" stroke="currentColor" strokeWidth="1.5" />
-                <path
-                  d="M10 5.8V10l2.8 1.8"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p>
-                <strong>Recordatorios que sí llegan</strong>
-                Seguro, revisión e impuestos avisados con semanas de margen.
-              </p>
-            </div>
-            <div className="lp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path
-                  d="M4.5 3.5h7l4 4v9a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M11.5 3.7V8h4.1M7 11.5h6M7 14.2h4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <p>
-                <strong>Un historial que vale</strong>
-                Cada servicio, repuesto y gasto listo para mostrar al vender.
-              </p>
-            </div>
-            <div className="lp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <rect
-                  x="6"
-                  y="2.8"
-                  width="8"
-                  height="14.4"
-                  rx="1.8"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-                <path d="M8.8 14.6h2.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              <p>
-                <strong>En tu teléfono, sin instalar</strong>
-                Se abre desde el navegador y queda como una app en tu pantalla.
-              </p>
-            </div>
+          <div className="lp-shell lp-hero-foot">
+            <ul className="lp-hero-stats">
+              <li>
+                <span className="lp-stat-value">Todo</span>
+                <span className="lp-stat-label">el historial en un lugar</span>
+              </li>
+              <li>
+                <span className="lp-stat-value">Antes</span>
+                <span className="lp-stat-label">de que venza cada papel</span>
+              </li>
+              <li>
+                <span className="lp-stat-value">$3.99</span>
+                <span className="lp-stat-label">al mes, desde</span>
+              </li>
+            </ul>
           </div>
         </section>
 
-        <section className="lp-section" id="como-funciona">
-          <div className="lp-shell lp-how-grid">
-            <div className="lp-how-copy">
-              <span className="lp-kicker">Cómo funciona</span>
-              <h2>
-                Tres pasos y tu carro deja de ser <span className="lp-serif">un misterio</span>.
+        <section className="lp-dark lp-manifesto" aria-labelledby="manifiesto-titulo">
+          <div className="lp-marquee" aria-hidden="true">
+            <div className="lp-marquee-track">
+              {[0, 1].map((copy) => (
+                <div className="lp-marquee-group" key={copy}>
+                  {SERVICES.map((service) => (
+                    <span className="lp-marquee-item" key={service}>
+                      {service}
+                      <span className="lp-marquee-mark">✦</span>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="lp-shell lp-manifesto-grid">
+            <div className="lp-manifesto-copy" data-reveal>
+              <span className="lp-kicker lp-kicker-invert">Por qué existe</span>
+              <h2 id="manifiesto-titulo">
+                Un carro no se daña de golpe. Se daña cuando{' '}
+                <span className="lp-serif">nadie lleva la cuenta</span>.
               </h2>
+              <p>
+                CarCheck es esa libreta que sí se acuerda: qué toca, cuándo toca y cuánto
+                costó. Sin hojas de cálculo, sin facturas en la guantera, sin fechas en la
+                cabeza.
+              </p>
+            </div>
+
+            <ul className="lp-manifesto-list">
+              <li data-reveal>
+                <span className="lp-manifesto-num" aria-hidden="true">
+                  01
+                </span>
+                <div>
+                  <h3>El aceite se pasa de fecha</h3>
+                  <p>Y lo notas cuando el motor ya suena distinto.</p>
+                </div>
+              </li>
+              <li data-reveal className="d1">
+                <span className="lp-manifesto-num" aria-hidden="true">
+                  02
+                </span>
+                <div>
+                  <h3>El seguro vence en silencio</h3>
+                  <p>La multa llega antes que el aviso. Siempre.</p>
+                </div>
+              </li>
+              <li data-reveal className="d2">
+                <span className="lp-manifesto-num" aria-hidden="true">
+                  03
+                </span>
+                <div>
+                  <h3>El historial se pierde</h3>
+                  <p>Facturas en la guantera, fotos en el chat, nada junto.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section className="lp-section lp-how" id="como-funciona">
+          <div className="lp-shell">
+            <div className="lp-section-head" data-reveal>
+              <div>
+                <span className="lp-kicker">Cómo funciona</span>
+                <h2>
+                  Tres pasos y tu carro deja de ser <span className="lp-serif">un misterio</span>.
+                </h2>
+              </div>
               <p>
                 No necesitas una hoja de cálculo ni una carpeta llena de facturas. Solo
                 registrar lo importante cuando pasa.
               </p>
-              <figure className="lp-how-photo">
+            </div>
+
+            <div className="lp-how-grid">
+              <figure className="lp-how-photo" data-reveal>
                 <img
                   src="/images/maintenance-oil.webp"
                   alt="Manos vertiendo aceite nuevo en el motor de un auto"
@@ -246,106 +347,126 @@ export default function Home() {
                 />
                 <figcaption>Cada servicio que registras construye el historial.</figcaption>
               </figure>
+
+              <ol className="lp-steps">
+                <li className="lp-step" data-reveal>
+                  <span className="lp-step-num" aria-hidden="true">
+                    01
+                  </span>
+                  <div>
+                    <h3>Agrega tu vehículo</h3>
+                    <p>
+                      Marca, modelo, año, placa y kilometraje. Si tienes varios — o compartes
+                      autos en familia — cada uno lleva su propio historial.
+                    </p>
+                  </div>
+                </li>
+                <li className="lp-step d1" data-reveal>
+                  <span className="lp-step-num" aria-hidden="true">
+                    02
+                  </span>
+                  <div>
+                    <h3>Registra lo que pasa</h3>
+                    <p>
+                      Cambios de aceite, frenos, alineación, cargas de combustible, seguros y
+                      documentos. Con taller, costo y comprobante si los tienes.
+                    </p>
+                  </div>
+                </li>
+                <li className="lp-step d2" data-reveal>
+                  <span className="lp-step-num" aria-hidden="true">
+                    03
+                  </span>
+                  <div>
+                    <h3>Recibe el aviso a tiempo</h3>
+                    <p>
+                      CarCheck calcula vencimientos y próximos servicios. Tú decides qué hacer;
+                      la app se encarga de que no se te pase.
+                    </p>
+                  </div>
+                </li>
+              </ol>
             </div>
-            <ol className="lp-steps">
-              <li className="lp-step">
-                <span className="lp-step-num" aria-hidden="true">
-                  01
-                </span>
-                <div>
-                  <h3>Agrega tu vehículo</h3>
-                  <p>
-                    Marca, modelo, año, placa y kilometraje. Si tienes varios — o compartes
-                    autos en familia — cada uno lleva su propio historial.
-                  </p>
-                </div>
-              </li>
-              <li className="lp-step">
-                <span className="lp-step-num" aria-hidden="true">
-                  02
-                </span>
-                <div>
-                  <h3>Registra lo que pasa</h3>
-                  <p>
-                    Cambios de aceite, frenos, alineación, cargas de combustible, seguros y
-                    documentos. Con taller, costo y comprobante si los tienes.
-                  </p>
-                </div>
-              </li>
-              <li className="lp-step">
-                <span className="lp-step-num" aria-hidden="true">
-                  03
-                </span>
-                <div>
-                  <h3>Recibe el aviso a tiempo</h3>
-                  <p>
-                    CarCheck calcula vencimientos y próximos servicios. Tú decides qué hacer;
-                    la app se encarga de que no se te pase.
-                  </p>
-                </div>
-              </li>
-            </ol>
           </div>
         </section>
 
-        <section className="lp-product" id="producto">
+        <section className="lp-dark lp-product" id="producto" aria-labelledby="producto-titulo">
           <div className="lp-shell lp-product-grid">
-            <div>
-              <span className="lp-kicker">La app</span>
-              <h2>
-                Tus pendientes, <span className="lp-serif">a la vista</span>.
+            <div className="lp-product-copy" data-reveal>
+              <span className="lp-kicker lp-kicker-invert">La app</span>
+              <h2 id="producto-titulo">
+                Todo lo que tu carro necesita, <span className="lp-serif">en una pantalla</span>.
               </h2>
               <p className="lp-product-lede">
-                Una pantalla para saber qué está vencido, qué viene pronto y qué ya resolviste.
-                Sin buscar entre correos ni preguntar en el taller.
+                Sabes qué está vencido, qué viene pronto y qué ya resolviste. Sin buscar entre
+                correos ni preguntar en el taller.
               </p>
-              <ul className="lp-checklist">
-                <li>
-                  <span className="lp-check" aria-hidden="true">
-                    <CheckIcon />
-                  </span>
-                  Vencidos y próximos, separados y ordenados por fecha.
-                </li>
-                <li>
-                  <span className="lp-check" aria-hidden="true">
-                    <CheckIcon />
-                  </span>
-                  Cada aviso conectado al vehículo y al documento que lo origina.
-                </li>
-                <li>
-                  <span className="lp-check" aria-hidden="true">
-                    <CheckIcon />
-                  </span>
-                  Reportes de gasto por vehículo, exportables a CSV.
-                </li>
-                <li>
-                  <span className="lp-check" aria-hidden="true">
-                    <CheckIcon />
-                  </span>
-                  Descarta lo que ya atendiste y sigue con lo demás.
-                </li>
-              </ul>
-              <p className="lp-product-note">Captura real de CarCheck en un teléfono.</p>
             </div>
+
+            <div
+              className="lp-tabs"
+              role="tablist"
+              aria-label="Pantallas de la app"
+              onKeyDown={onTabKeyDown}
+            >
+              {SHOTS.map((shot, index) => (
+                <button
+                  key={shot.id}
+                  ref={(node) => {
+                    tabRefs.current[index] = node
+                  }}
+                  id={`tab-${shot.id}`}
+                  className="lp-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected={index === activeShot}
+                  aria-controls={`panel-${shot.id}`}
+                  tabIndex={index === activeShot ? 0 : -1}
+                  onClick={() => setActiveShot(index)}
+                >
+                  <span className="lp-tab-index" aria-hidden="true">
+                    0{index + 1}
+                  </span>
+                  <span className="lp-tab-text">
+                    <span className="lp-tab-label">{shot.label}</span>
+                    <span className="lp-tab-detail">{shot.detail}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+
             <div className="lp-phone-stage">
               <div className="lp-phone">
                 <div className="lp-phone-screen">
-                  <img
-                    src="/images/app-reminders.png"
-                    alt="Pantalla de recordatorios de CarCheck con avisos vencidos y próximos"
-                    width={780}
-                    height={1234}
-                  />
+                  {SHOTS.map((shot, index) => (
+                    <div
+                      key={shot.id}
+                      id={`panel-${shot.id}`}
+                      role="tabpanel"
+                      aria-labelledby={`tab-${shot.id}`}
+                      hidden={index !== activeShot}
+                      className="lp-shot"
+                    >
+                      <img
+                        src={shot.src}
+                        alt={shot.alt}
+                        width={780}
+                        height={1234}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
-              <p className="lp-phone-caption">Recordatorios · Toyota Corolla</p>
+              <p className="lp-phone-caption">{SHOTS[activeShot].caption}</p>
+              <p className="lp-phone-note">Capturas reales de CarCheck en un teléfono.</p>
             </div>
           </div>
         </section>
 
-        <section className="lp-section" aria-labelledby="flotas-titulo">
+        <section className="lp-section lp-fleet-section" aria-labelledby="flotas-titulo">
           <div className="lp-shell">
-            <div className="lp-fleet">
+            <div className="lp-fleet" data-reveal>
               <img
                 src="/images/fleet-car.webp"
                 alt="Auto aparcado frente a un edificio"
@@ -354,7 +475,7 @@ export default function Home() {
                 loading="lazy"
               />
               <div className="lp-fleet-body">
-                <span className="lp-kicker">Para talleres y familias</span>
+                <span className="lp-kicker lp-kicker-invert">Para talleres y familias</span>
                 <h2 id="flotas-titulo">Un garaje compartido, sin perder el detalle.</h2>
                 <p>
                   Crea una organización, invita a tus mecánicos o a tu familia y trabajen sobre
@@ -372,9 +493,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="lp-section" id="precios" style={{ paddingTop: 0 }}>
+        <section className="lp-section lp-pricing" id="precios">
           <div className="lp-shell">
-            <div className="lp-section-head">
+            <div className="lp-section-head" data-reveal>
               <div>
                 <span className="lp-kicker">Precios</span>
                 <h2>
@@ -388,7 +509,7 @@ export default function Home() {
             </div>
 
             <div className="lp-pricing-grid">
-              <article className="lp-plan">
+              <article className="lp-plan d1" data-reveal>
                 <h3 className="lp-plan-name">Básico</h3>
                 <p className="lp-plan-desc">Un vehículo y su historial completo.</p>
                 <p className="lp-price">
@@ -416,7 +537,7 @@ export default function Home() {
                 </div>
               </article>
 
-              <article className="lp-plan lp-plan-featured">
+              <article className="lp-plan lp-plan-featured" data-reveal>
                 <span className="lp-plan-tag">Para familias</span>
                 <h3 className="lp-plan-name">Familiar</h3>
                 <p className="lp-plan-desc">
@@ -447,7 +568,7 @@ export default function Home() {
                 </div>
               </article>
 
-              <article className="lp-plan">
+              <article className="lp-plan d2" data-reveal>
                 <h3 className="lp-plan-name">Taller</h3>
                 <p className="lp-plan-desc">
                   Vehículos y miembros sin límite para talleres.
@@ -484,9 +605,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="lp-section" id="preguntas" style={{ paddingTop: 0 }}>
+        <section className="lp-section lp-faq-section" id="preguntas">
           <div className="lp-shell lp-faq-grid">
-            <div>
+            <div data-reveal>
               <span className="lp-kicker">Preguntas</span>
               <h2>Lo que suelen preguntar.</h2>
               <p>
@@ -550,11 +671,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="lp-final">
-          <div className="lp-shell">
-            <div className="lp-final-inner">
-              <h2>
-                Que el próximo <span className="lp-serif">“se me olvidó”</span> no te salga caro.
+        <section className="lp-final" aria-labelledby="final-titulo">
+          <img
+            className="lp-final-photo"
+            src="/images/engine-detail.webp"
+            alt=""
+            width={1200}
+            height={900}
+            loading="lazy"
+          />
+          <div className="lp-shell lp-final-inner">
+            <div className="lp-final-copy" data-reveal>
+              <h2 id="final-titulo">
+                Que el próximo{' '}
+                <span className="lp-serif lp-nowrap">“se me olvidó”</span> no te salga caro.
               </h2>
               <p>
                 Empieza hoy con tus vehículos. En cinco minutos tendrás el historial ordenado y
