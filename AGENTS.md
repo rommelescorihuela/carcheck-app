@@ -31,7 +31,8 @@ Verificación antes de dar algo por terminado: `npm run typecheck && npm run tes
 - **API**: `src/api/client.ts` añade `Authorization: Bearer` desde `src/api/token.ts` y, ante 401,
   llama a `POST /token/refresh` **una vez** y reintenta (dedupe con `refreshPromise`; detecta si otra
   pestaña renovó el token vía evento `storage`). Endpoints en `src/api/endpoints.ts`; tipos en
-  `src/api/types.ts`. Normaliza `VITE_API_URL` quitando la barra final.
+  `src/api/types.ts`. Normaliza `VITE_API_URL` quitando la barra final y, en producción,
+  `public/config.js` (`window.__CARCHECK_CONFIG__.apiUrl`) puede sobrescribirla sin recompilar.
 - **Sesión**: `src/stores/auth.ts` (Zustand + persist). El token NO va en el store persistido, sino
   en `src/api/token.ts`. `bootstrap()` valida con `GET /user`.
 - **Organización activa**: `src/stores/organization.ts` (persiste `activeId`; `null` = ámbito

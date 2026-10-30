@@ -267,6 +267,22 @@ Detalles que no se pueden olvidar:
 - **Assets con hash** en `/assets/` con caché larga e inmutable.
 - El backend debe incluir el origen de la PWA en `CORS_ALLOWED_ORIGINS`.
 
+`public/.htaccess` implementa todo lo anterior para Apache/LiteSpeed (cPanel, Plesk, hosting
+compartido) y se copia a `dist/` en cada build. En Nginx hay que replicarlo a mano.
+
+### Cambiar la API sin recompilar
+
+`public/config.js` se publica junto a `index.html` y define la URL de la API en tiempo de
+ejecución:
+
+```js
+window.__CARCHECK_CONFIG__ = { apiUrl: 'https://api.tudominio.com/api' }
+```
+
+Gana sobre el `VITE_API_URL` compilado y **no se precachea** (ver `globIgnores` en
+`vite.config.ts`), así que editarlo en el servidor y recargar basta: útil en hosting sin Node.
+En `vite dev` se ignora y se usa `VITE_API_URL`.
+
 La guía de producción completa, con Nginx y variables del backend, está en
 [`carcheck/DEPLOY.md`](https://github.com/rommelescorihuela/carcheck/blob/main/DEPLOY.md).
 
@@ -286,5 +302,5 @@ La guía de producción completa, con Nginx y variables del backend, está en
 - El pago es manual (comprobante + aprobación), no hay pasarela en la app.
 - El push requiere HTTPS, permiso del usuario y claves VAPID configuradas en el backend.
 - El E2E no corre en CI porque necesita PostgreSQL y el backend levantado.
-- El build apunta a `VITE_API_URL`: un `dist/` con el placeholder de ejemplo no autentica contra
-  una API real.
+- El build apunta a `VITE_API_URL`; un `dist/` con el placeholder de ejemplo no autentica contra
+  una API real hasta que edites `config.js` en el servidor (o rebuild con tu dominio).

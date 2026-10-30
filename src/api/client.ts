@@ -1,7 +1,15 @@
 import { clearToken, getToken, setToken } from './token'
 import { ApiError, type ApiErrorBody } from './types'
 
-const BASE_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api').replace(/\/+$/, '')
+// En producción `public/config.js` puede sobrescribir la URL compilada, para cambiar
+// de dominio sin recompilar la PWA (hosting compartido sin Node).
+const runtimeApiUrl = import.meta.env.PROD ? window.__CARCHECK_CONFIG__?.apiUrl : undefined
+
+const BASE_URL = (
+  runtimeApiUrl ||
+  import.meta.env.VITE_API_URL ||
+  'http://localhost:8000/api'
+).replace(/\/+$/, '')
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 

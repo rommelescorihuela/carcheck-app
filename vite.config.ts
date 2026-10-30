@@ -32,6 +32,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // `config.js` se edita en el servidor: nunca debe precachearse.
+        globIgnores: ['**/config.js'],
         navigateFallback: '/index.html',
         // Handlers de `push` y `notificationclick` para las suscripciones push.
         importScripts: ['push-sw.js'],

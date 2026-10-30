@@ -1,0 +1,44 @@
+# CarCheck PWA — reglas para Apache / LiteSpeed (cPanel, Plesk, hosting compartido).
+# Publica el contenido de dist/ en el document root del dominio o subdominio de la app.
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # SPA: las rutas del router (/flota, /vehiculos/12…) se sirven con index.html.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+    AddType image/webp .webp
+    AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Assets normales (iconos, imágenes, fuentes): caché larga.
+    <FilesMatch "\.(js|css|woff2|png|svg|webp|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # El service worker y el manifest NO se cachean: si no, la app no se actualiza.
+    # Va después de la regla anterior para que gane en sw.js, push-sw.js y registerSW.js.
+    <FilesMatch "^(index\.html|sw\.js|registerSW\.js|push-sw\.js|manifest\.webmanifest|config\.js)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
