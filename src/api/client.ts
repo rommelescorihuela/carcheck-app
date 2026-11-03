@@ -2,14 +2,23 @@ import { clearToken, getToken, setToken } from './token'
 import { ApiError, type ApiErrorBody } from './types'
 
 // En producción `public/config.js` puede sobrescribir la URL compilada, para cambiar
-// de dominio sin recompilar la PWA (hosting compartido sin Node).
-const runtimeApiUrl = import.meta.env.PROD ? window.__CARCHECK_CONFIG__?.apiUrl : undefined
+// de dominio sin recompilar la PWA (hosting compartido sin Node). Vacío = no sobrescribe.
+const runtimeApiUrl = import.meta.env.PROD
+  ? window.__CARCHECK_CONFIG__?.apiUrl?.trim() || undefined
+  : undefined
 
-const BASE_URL = (
-  runtimeApiUrl ||
-  import.meta.env.VITE_API_URL ||
-  'http://localhost:8000/api'
-).replace(/\/+$/, '')
+/**
+ * URL base de la API: `config.js` > `VITE_API_URL` > local. Sin barras finales.
+ */
+export function apiBaseUrl(
+  runtime: string | undefined,
+  baked: string | undefined,
+  fallback = 'http://localhost:8000/api',
+): string {
+  return (runtime?.trim() || baked || fallback).replace(/\/+$/, '')
+}
+
+const BASE_URL = apiBaseUrl(runtimeApiUrl, import.meta.env.VITE_API_URL)
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 

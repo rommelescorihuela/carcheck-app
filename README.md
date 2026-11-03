@@ -279,9 +279,10 @@ ejecución:
 window.__CARCHECK_CONFIG__ = { apiUrl: 'https://api.tudominio.com/api' }
 ```
 
-Gana sobre el `VITE_API_URL` compilado y **no se precachea** (ver `globIgnores` en
-`vite.config.ts`), así que editarlo en el servidor y recargar basta: útil en hosting sin Node.
-En `vite dev` se ignora y se usa `VITE_API_URL`.
+Por defecto viene **vacío**: si no lo tocas se usa el `VITE_API_URL` compilado. Gana sobre ese
+valor y **no se precachea** (ver `globIgnores` en `vite.config.ts`), así que editarlo en el
+servidor y recargar basta: útil en hosting sin Node. En `vite dev` se ignora y se usa
+`VITE_API_URL`.
 
 La guía de producción completa, con Nginx y variables del backend, está en
 [`carcheck/DEPLOY.md`](https://github.com/rommelescorihuela/carcheck/blob/main/DEPLOY.md).
