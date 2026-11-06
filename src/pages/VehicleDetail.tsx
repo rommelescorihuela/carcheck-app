@@ -182,7 +182,9 @@ export default function VehicleDetail() {
       <section className="space-y-3 rounded border border-slate-200 bg-white p-4">
         <h2 className="text-lg font-semibold text-slate-800">Foto</h2>
         {vehicle.photo_url ? (
-          <img src={vehicle.photo_url} alt="Vehículo" className="h-48 w-full rounded object-cover" />
+          <div className="photo-grade h-48 w-full rounded">
+            <img src={vehicle.photo_url} alt="Vehículo" className="h-full w-full object-cover" />
+          </div>
         ) : (
           <p className="text-sm text-slate-500">Sin foto.</p>
         )}

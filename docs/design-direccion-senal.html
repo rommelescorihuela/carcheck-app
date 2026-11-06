@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>CarCheck — dirección visual «Señal»</title>
+    <style>
+      /* ============================================================
+         CarCheck · dirección «Señal»
+         Azul profundo + rojo carrera. Un solo gesto vibrante
+         (gradiente rojo→ámbar) y un solo grade para las fotos:
+         sombras azul tinta, luces ámbar, grano fino.
+         ============================================================ */
+      :root {
+        --ink: #08131d;
+        --ink-2: #0d1e2c;
+        --line: rgb(255 255 255 / 0.1);
+        --paper: #f4f6f7;
+        --blue: #1d4a70;
+        --blue-soft: #7ba5c8;
+        --signal: #c03a2b;
+        --amber: #ffb03a;
+        --grad: linear-gradient(100deg, #c03a2b 0%, #ff5a3c 46%, #ffb03a 100%);
+        --text: #eef3f7;
+        --muted: rgb(238 243 247 / 0.62);
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior: none;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ink);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-feature-settings: "ss01" 1;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      ::selection { background: var(--signal); color: #fff; }
+      h1, h2, h3 { margin: 0; text-wrap: balance; }
+      p { margin: 0; text-wrap: pretty; }
+      a, button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+      .wrap { width: min(1180px, 100% - 48px); margin-inline: auto; }
+
+      .eyebrow {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em;
+        text-transform: uppercase; color: var(--blue-soft);
+      }
+      .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; opacity: 0.8; }
+
+      /* ============================================================
+         GRADE ÚNICO PARA TODAS LAS FOTOS
+         Cualquier imagen entra en el sistema igual: gris, sombras
+         azul tinta, luz cálida arriba a la derecha y grano.
+         ============================================================ */
+      .photo { position: relative; overflow: hidden; background: #0b1a26; }
+      .photo img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        filter: grayscale(1) contrast(1.06) brightness(0.92);
+        transform: scale(1.02);
+      }
+      /* Sombras: azul de marca */
+      .photo .grade {
+        position: absolute; inset: 0;
+        background: #123a5a; mix-blend-mode: color; opacity: 0.66;
+      }
+      /* Luz: gradiente de señal entrando por la derecha */
+      .photo .light {
+        position: absolute; inset: 0;
+        background: radial-gradient(120% 90% at 84% 8%, rgb(255 108 58 / 0.55), transparent 58%);
+        mix-blend-mode: screen; opacity: 0.9;
+      }
+      /* Grano: pega la foto al resto del material */
+      .photo .grain {
+        position: absolute; inset: 0; opacity: 0.14; mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+      }
+      /* Viñeta: oscurece bordes para que el texto respire */
+      .photo .vignette {
+        position: absolute; inset: 0;
+        background: radial-gradient(80% 70% at 55% 40%, transparent, rgb(8 19 29 / 0.55) 100%);
+      }
+
+      /* ---------- Fondo del hero ---------- */
+      .stage { position: relative; overflow: clip; isolation: isolate; }
+
+      .stage::before {
+        content: ""; position: absolute; inset: -20% -10% auto -20%; height: 120%; z-index: -2;
+        background:
+          radial-gradient(46% 46% at 78% 12%, rgb(255 90 60 / 0.34), transparent 70%),
+          radial-gradient(38% 42% at 88% 34%, rgb(255 176 58 / 0.2), transparent 72%),
+          radial-gradient(52% 52% at 12% 6%, rgb(29 74 112 / 0.55), transparent 74%);
+        filter: blur(24px) saturate(120%);
+        animation: drift 24s var(--ease-out) infinite alternate;
+      }
+
+      @keyframes drift {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to { transform: translate3d(-2.5%, 2%, 0) scale(1.06); }
+      }
+
+      /* ---------- Barra superior translúcida ---------- */
+      .nav {
+        position: sticky; top: 0; z-index: 20;
+        padding: calc(10px + env(safe-area-inset-top)) 0 10px;
+        background: rgb(8 19 29 / 0.58);
+        backdrop-filter: blur(18px) saturate(160%);
+        border-bottom: 1px solid rgb(255 255 255 / 0.06);
+      }
+      .nav-in { display: flex; align-items: center; gap: 24px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; }
+      .brand-mark {
+        width: 28px; height: 28px; border-radius: 9px; background: var(--grad);
+        box-shadow: 0 10px 22px -12px rgb(255 90 60 / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.35);
+      }
+      .nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 0.9rem; color: var(--muted); }
+      .nav-links a { color: inherit; text-decoration: none; }
+      .nav-cta {
+        border: 0; border-radius: 999px; padding: 11px 18px;
+        font: inherit; font-size: 0.88rem; font-weight: 600; color: #fff; cursor: pointer;
+        background: var(--grad);
+        box-shadow: 0 16px 30px -16px rgb(255 90 60 / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.3);
+        transition: transform 120ms var(--ease-out), box-shadow 200ms var(--ease-out);
+      }
+      .nav-cta:active { transform: scale(0.97); }
+
+      /* ---------- Hero ---------- */
+      .hero { position: relative; padding: clamp(48px, 7vw, 104px) 0 clamp(56px, 7vw, 96px); }
+
+      /* Foto a sangre en la mitad derecha, disuelta hacia la tinta */
+      .hero-photo {
+        position: absolute; inset: 0 0 0 36%; z-index: -1;
+        mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.55) 26%, #000 52%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.55) 26%, #000 52%);
+      }
+      /* Refuerzo de tinta en el borde: la foto no debe cortar en seco. */
+      .hero-photo::before {
+        content: ""; position: absolute; inset: 0; z-index: 2;
+        background: linear-gradient(to right, var(--ink) 0%, rgb(8 19 29 / 0.55) 18%, transparent 46%);
+      }
+      .hero-photo .photo { position: absolute; inset: 0; }
+      .hero-photo .photo img { object-position: 62% 46%; }
+      /* Desvanecido inferior para que la foto no corte en seco */
+      .hero-photo::after {
+        content: ""; position: absolute; inset: 55% 0 0; z-index: 2;
+        background: linear-gradient(to bottom, transparent, var(--ink));
+      }
+
+      .hero-grid {
+        position: relative;
+        display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+        gap: clamp(32px, 5vw, 72px); align-items: center;
+      }
+
+      .hero h1 {
+        margin-top: 22px;
+        font-size: clamp(2.9rem, 6.6vw, 5.8rem);
+        font-weight: 500; line-height: 0.92; letter-spacing: -0.045em;
+        text-shadow: 0 2px 40px rgb(8 19 29 / 0.55);
+      }
+      .serif { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+      .grad-text {
+        background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      .lede { margin-top: 24px; max-width: 44ch; font-size: clamp(1rem, 1.25vw, 1.12rem); line-height: 1.6; color: var(--muted); }
+
+      .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 32px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        min-height: 52px; padding: 0 26px; border-radius: 999px;
+        border: 1px solid transparent; font: inherit; font-size: 0.96rem; font-weight: 600;
+        cursor: pointer; text-decoration: none; color: #fff;
+        transition: transform 120ms var(--ease-out), background-color 180ms var(--ease-out);
+      }
+      .btn:active { transform: scale(0.97); }
+      .btn-solid {
+        background: var(--grad);
+        box-shadow: 0 20px 44px -20px rgb(255 90 60 / 0.95), inset 0 1px 0 rgb(255 255 255 / 0.32);
+      }
+      .btn-quiet {
+        border-color: rgb(255 255 255 / 0.18); color: var(--text);
+        background: rgb(8 19 29 / 0.35); backdrop-filter: blur(12px);
+      }
+      .micro { margin-top: 18px; font-size: 0.82rem; color: rgb(238 243 247 / 0.46); }
+
+      /* ---------- Tarjeta de datos ---------- */
+      .dash {
+        position: relative; padding: 22px; border-radius: 28px;
+        background: linear-gradient(170deg, rgb(16 36 52 / 0.86), rgb(8 19 29 / 0.9));
+        border: 1px solid rgb(255 255 255 / 0.12);
+        box-shadow: 0 40px 90px -40px rgb(0 0 0 / 0.95), inset 0 1px 0 rgb(255 255 255 / 0.16);
+        backdrop-filter: blur(14px);
+        transform: perspective(1200px) rotateX(3deg) rotateY(-5deg);
+        transform-origin: 50% 100%;
+        will-change: transform;
+      }
+      .dash-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+      .odometer {
+        margin-top: 4px;
+        font-size: clamp(2.3rem, 3.6vw, 3.1rem); font-weight: 500;
+        letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums;
+      }
+      .odometer small { font-size: 0.9rem; letter-spacing: 0; color: var(--muted); margin-left: 6px; }
+
+      .ring-row { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
+      .ring {
+        --p: 62;
+        width: 100px; height: 100px; flex: 0 0 auto; border-radius: 50%;
+        background:
+          radial-gradient(closest-side, #0c1d2b 78%, transparent 79% 100%),
+          conic-gradient(from -90deg, var(--signal) calc(var(--p) * 1%), rgb(255 255 255 / 0.09) 0);
+        display: grid; place-items: center; text-align: center;
+        box-shadow: inset 0 0 22px rgb(255 90 60 / 0.18);
+      }
+      .ring b { font-size: 1.12rem; font-variant-numeric: tabular-nums; }
+      .ring span { display: block; font-size: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+      .chips { display: grid; gap: 8px; width: 100%; }
+      .chip {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 10px 13px; border-radius: 14px; font-size: 0.84rem;
+        background: rgb(255 255 255 / 0.05); border: 1px solid rgb(255 255 255 / 0.07);
+      }
+      .chip em { font-style: normal; color: var(--muted); }
+      .chip b { font-variant-numeric: tabular-nums; }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 4px rgb(255 176 58 / 0.16); display: inline-block; margin-right: 7px; }
+      .dot.ok { background: #4ade80; box-shadow: 0 0 0 4px rgb(74 222 128 / 0.16); }
+
+      .bars { display: flex; align-items: flex-end; gap: 6px; height: 54px; margin-top: 18px; }
+      .bars i {
+        flex: 1; border-radius: 6px 6px 3px 3px;
+        background: linear-gradient(180deg, rgb(255 176 58 / 0.95), rgb(192 58 43 / 0.85));
+        transform-origin: bottom; animation: grow 900ms var(--ease-spring) backwards;
+      }
+      .bars i:nth-child(even) { animation-delay: 60ms; }
+      .bars i:nth-child(3n) { animation-delay: 120ms; }
+      @keyframes grow { from { transform: scaleY(0.04); opacity: 0.2; } }
+
+      /* ---------- Foto a sangre con cifras ---------- */
+      .band { position: relative; isolation: isolate; overflow: clip; }
+      .band .photo { position: absolute; inset: 0; z-index: -1; }
+      .band .photo img { object-position: 50% 42%; filter: grayscale(1) contrast(1.12) brightness(1.12); }
+      .band::before {
+        content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+        background:
+          linear-gradient(180deg, var(--ink) 0%, rgb(8 19 29 / 0.22) 30%, rgb(8 19 29 / 0.34) 72%, var(--ink) 100%),
+          linear-gradient(90deg, rgb(8 19 29 / 0.94) 0%, rgb(8 19 29 / 0.58) 45%, rgb(8 19 29 / 0) 82%);
+      }
+      .band-inner { position: relative; z-index: 1; padding: clamp(64px, 9vw, 128px) 0; }
+      .band h2 {
+        margin-top: 16px; max-width: 24ch;
+        font-size: clamp(1.9rem, 3.4vw, 3rem); font-weight: 500;
+        line-height: 1.02; letter-spacing: -0.04em;
+      }
+      .band p.copy { margin-top: 16px; max-width: 46ch; color: var(--muted); line-height: 1.6; }
+
+      .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 38px; max-width: 640px; }
+      .stat {
+        padding: 16px 18px; border-radius: 18px;
+        background: rgb(8 19 29 / 0.55); border: 1px solid rgb(255 255 255 / 0.1);
+        backdrop-filter: blur(14px) saturate(140%);
+      }
+      .stat b {
+        display: block; font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 500;
+        letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+      }
+      .stat b.hot { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .stat span { font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+      /* ---------- Sistema (claro) ---------- */
+      .system { background: var(--paper); color: #0d1a24; padding: clamp(44px, 6vw, 84px) 0; }
+      .system h2 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); letter-spacing: -0.035em; line-height: 1.05; }
+      .system p { color: #4a565f; margin-top: 10px; max-width: 62ch; line-height: 1.6; }
+
+      .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 28px; }
+      .sw { border-radius: 16px; overflow: hidden; border: 1px solid rgb(13 26 36 / 0.1); background: #fff; }
+      .sw div { height: 78px; }
+      .sw p { padding: 9px 12px; font-size: 0.76rem; color: #46525b; margin: 0; }
+      .sw p b { display: block; color: #0d1a24; font-size: 0.82rem; }
+
+      /* Grade paso a paso */
+      .grade-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 22px; }
+      .step { border-radius: 16px; overflow: hidden; border: 1px solid rgb(13 26 36 / 0.1); background: #fff; }
+      .step .frame { aspect-ratio: 4 / 3; }
+      .step .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .step .raw img { filter: none; }
+      .step .duo img { filter: grayscale(1) contrast(1.08) brightness(0.78); }
+      .step p { padding: 9px 12px; margin: 0; font-size: 0.74rem; color: #46525b; }
+      .step p b { display: block; color: #0d1a24; font-size: 0.8rem; }
+
+      .motion { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 26px; }
+      .motion article { background: #fff; border: 1px solid rgb(13 26 36 / 0.1); border-radius: 18px; padding: 16px 18px; }
+      .motion h3 { font-size: 0.95rem; letter-spacing: -0.01em; }
+      .motion p { font-size: 0.83rem; margin-top: 6px; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.78rem; color: #b4432f; }
+
+      /* ---------- Móvil ---------- */
+      .mobile-strip { background: #0a1722; padding: clamp(40px, 6vw, 80px) 0; }
+      .phone {
+        position: relative; width: min(360px, 100%); margin-inline: auto;
+        aspect-ratio: 9 / 17.6; border-radius: 44px; overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 0.14);
+        background: linear-gradient(180deg, #0c1d2a, #07121b);
+        box-shadow: 0 60px 120px -50px #000, inset 0 1px 0 rgb(255 255 255 / 0.16);
+      }
+      /* Cabecera con foto real del vehículo, mismo grade */
+      .phone-hero { position: relative; height: 158px; }
+      .phone-hero .photo { position: absolute; inset: 0; }
+      .phone-hero .photo img { object-position: 52% 34%; }
+      .phone-hero::after {
+        content: ""; position: absolute; inset: 52% 0 0; z-index: 2;
+        background: linear-gradient(to bottom, transparent, #0b1b27 92%);
+      }
+      /* En superficies pequeñas el grade baja de intensidad: la foto no se come el texto. */
+      .phone-hero .grade { opacity: 0.5; }
+      .phone-hero .light { opacity: 0.65; }
+      .phone-head { position: relative; z-index: 3; display: flex; justify-content: space-between; padding: 18px 20px 0; font-size: 0.75rem; color: rgb(238 243 247 / 0.75); }
+      .phone-body { position: relative; z-index: 3; padding: 0 20px; margin-top: -34px; }
+      .phone-title { font-size: 1.45rem; letter-spacing: -0.035em; line-height: 1.05; }
+      .phone-title span { color: var(--amber); }
+      .phone-cards { display: grid; gap: 10px; margin-top: 16px; }
+      .pcard {
+        border-radius: 18px; padding: 13px 15px;
+        background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.08);
+        display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.84rem;
+        backdrop-filter: blur(10px);
+      }
+      .pcard b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .pcard .mini { font-size: 0.68rem; color: var(--muted); display: block; margin-top: 2px; }
+
+      .tabbar {
+        position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 4;
+        display: flex; align-items: center; justify-content: space-around;
+        padding: 9px 10px calc(9px + env(safe-area-inset-bottom, 0px));
+        border-radius: 22px;
+        background: rgb(12 29 42 / 0.72); backdrop-filter: blur(22px) saturate(170%);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        box-shadow: 0 20px 40px -18px #000, inset 0 1px 0 rgb(255 255 255 / 0.14);
+      }
+      .tab { display: grid; justify-items: center; gap: 4px; font-size: 0.6rem; color: rgb(238 243 247 / 0.55); }
+      .tab i { width: 21px; height: 21px; border-radius: 7px; background: rgb(255 255 255 / 0.16); }
+      .tab.on { color: var(--text); }
+      .tab.on i { background: var(--grad); box-shadow: 0 8px 18px -8px rgb(255 90 60 / 1); }
+      .fab {
+        width: 50px; height: 50px; border-radius: 50%; border: 0; cursor: pointer;
+        background: var(--grad); color: #fff; font-size: 1.5rem; line-height: 1;
+        box-shadow: 0 16px 30px -12px rgb(255 90 60 / 0.95), inset 0 1px 0 rgb(255 255 255 / 0.35);
+        transform: translateY(-14px);
+      }
+
+      footer { padding: 34px 0 46px; font-size: 0.78rem; color: rgb(238 243 247 / 0.4); }
+
+      @media (max-width: 900px) {
+        .hero-grid { grid-template-columns: 1fr; }
+        .hero-photo { inset: 0; opacity: 0.55; mask-image: linear-gradient(to bottom, #000 0%, transparent 78%); -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 78%); }
+        .hero-photo::after { display: none; }
+        .dash { transform: none; }
+        .nav-links { display: none; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .stage::before, .bars i { animation: none; }
+        html { scroll-behavior: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <header class="nav">
+        <div class="wrap nav-in">
+          <div class="brand"><span class="brand-mark"></span> CarCheck</div>
+          <nav class="nav-links">
+            <a href="#sistema">Sistema</a>
+            <a href="#fotos">Fotos</a>
+            <a href="#movil">Móvil</a>
+          </nav>
+          <button class="nav-cta">Empezar gratis</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <!-- Foto real, mismo grade, disuelta hacia la tinta por la izquierda -->
+        <div class="hero-photo" aria-hidden="true">
+          <div class="photo">
+            <img src="../public/images/hero-driving.webp" alt="" fetchpriority="high" />
+            <span class="grade"></span>
+            <span class="light"></span>
+            <span class="vignette"></span>
+            <span class="grain"></span>
+          </div>
+        </div>
+
+        <div class="wrap hero-grid">
+          <div>
+            <p class="eyebrow">14 días gratis · sin tarjeta</p>
+            <h1>El historial de tu carro,<br /><span class="grad-text serif">en orden.</span></h1>
+            <p class="lede">
+              Servicios, combustible, documentos y vencimientos en un solo lugar. Tu taller y tus
+              conductores registran; tú ves el gasto real de la flota en tiempo real.
+            </p>
+            <div class="cta-row">
+              <button class="btn btn-solid">Empezar gratis <span aria-hidden="true">→</span></button>
+              <button class="btn btn-quiet">Ver la demo</button>
+            </div>
+            <p class="micro">Sin tarjeta · Importa tu flota por CSV · Cancela cuando quieras</p>
+          </div>
+
+          <div class="dash" id="dash">
+            <span class="dash-label">Flota Norte · Octubre</span>
+            <p class="odometer" data-count="12480">0<small>km</small></p>
+            <div class="ring-row">
+              <div class="ring" style="--p: 62" role="img" aria-label="62% del presupuesto de mantenimiento usado">
+                <div><b>62%</b><span>presupuesto</span></div>
+              </div>
+              <div class="chips">
+                <div class="chip"><span><i class="dot"></i>Servicio 20.000 km</span><b>en 480 km</b></div>
+                <div class="chip"><span><i class="dot ok"></i>Seguro</span><em>al día</em></div>
+                <div class="chip"><span><i class="dot"></i>Revisión</span><b>12 nov</b></div>
+              </div>
+            </div>
+            <div class="bars" aria-hidden="true">
+              <i style="height: 38%"></i><i style="height: 62%"></i><i style="height: 48%"></i>
+              <i style="height: 78%"></i><i style="height: 55%"></i><i style="height: 92%"></i>
+              <i style="height: 44%"></i><i style="height: 70%"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Foto a sangre: la misma foto del taller, con las cifras encima -->
+    <section class="band" id="fotos">
+      <div class="photo" aria-hidden="true">
+        <img src="../public/images/engine-detail.webp" alt="" loading="lazy" />
+        <span class="grade"></span>
+        <span class="light"></span>
+        <span class="grain"></span>
+      </div>
+      <div class="wrap band-inner">
+        <p class="eyebrow">Una foto, un tratamiento</p>
+        <h2>Todas las imágenes del producto pasan por el mismo revelado.</h2>
+        <p class="copy">
+          Gris, sombras azul tinta y una luz cálida que entra por la derecha. Así una foto de motor,
+          una de carretera y una de taller se sienten parte del mismo sistema —y nunca compiten con
+          el texto.
+        </p>
+        <div class="stats">
+          <div class="stat"><b class="hot">$248,60</b><span>Gasto del mes</span></div>
+          <div class="stat"><b>480 km</b><span>Próximo servicio</span></div>
+          <div class="stat"><b>0</b><span>Documentos vencidos</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system" id="sistema">
+      <div class="wrap">
+        <h2>Un acento, no una fiesta.</h2>
+        <p>
+          El azul profundo sostiene la marca; el rojo carrera solo aparece donde hay energía o
+          alerta: cifras, barras, CTA y estados. El gradiente rojo→ámbar es el único degradado del
+          sistema, así que siempre significa lo mismo: <em>esto importa ahora</em>.
+        </p>
+
+        <div class="swatches">
+          <div class="sw"><div style="background: #08131d"></div><p><b>--ink</b>#08131d</p></div>
+          <div class="sw"><div style="background: #1d4a70"></div><p><b>--blue</b>#1d4a70</p></div>
+          <div class="sw"><div style="background: #c03a2b"></div><p><b>--signal</b>#c03a2b</p></div>
+          <div class="sw"><div style="background: linear-gradient(100deg, #c03a2b, #ff5a3c 46%, #ffb03a)"></div><p><b>--grad</b>energía</p></div>
+          <div class="sw"><div style="background: #f4f6f7"></div><p><b>--paper</b>#f4f6f7</p></div>
+          <div class="sw"><div style="background: #ffb03a"></div><p><b>--amber</b>#ffb03a</p></div>
+        </div>
+
+        <div class="grade-steps">
+          <div class="step">
+            <div class="frame raw"><img src="../public/images/maintenance-oil.webp" alt="Foto original del cambio de aceite" loading="lazy" /></div>
+            <p><b>1 · Original</b>Color y luz de la fuente, sin tocar.</p>
+          </div>
+          <div class="step">
+            <div class="frame duo"><img src="../public/images/maintenance-oil.webp" alt="La misma foto en duotono azul" loading="lazy" /></div>
+            <p><b>2 · Duotono azul</b>Gris + tinte del azul de marca.</p>
+          </div>
+          <div class="step">
+            <div class="frame"><div class="photo" style="width: 100%; height: 100%">
+              <img src="../public/images/maintenance-oil.webp" alt="La foto con luz cálida y grano" loading="lazy" />
+              <span class="grade"></span><span class="light"></span><span class="grain"></span>
+            </div></div>
+            <p><b>3 · Grade completo</b>Luz de señal + grano. El estándar.</p>
+          </div>
+        </div>
+
+        <div class="motion">
+          <article>
+            <h3>Pulsar, no esperar</h3>
+            <p>Feedback en <span class="mono">pointerdown</span>, no al soltar.</p>
+            <p class="mono">scale(0.97) · 100ms ease-out</p>
+          </article>
+          <article>
+            <h3>Números que suben</h3>
+            <p>El odómetro y el gasto se animan al entrar en pantalla.</p>
+            <p class="mono">900ms · easeOutCubic</p>
+          </article>
+          <article>
+            <h3>Muelle para hojas</h3>
+            <p>La hoja sigue al dedo y se puede agarrar a media animación.</p>
+            <p class="mono">damping 0.8 · response 0.3</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="mobile-strip" id="movil">
+      <div class="wrap" style="display: grid; gap: 28px">
+        <div>
+          <p class="eyebrow">En el bolsillo</p>
+          <h2 style="font-size: clamp(1.6rem, 2.6vw, 2.3rem); letter-spacing: -0.035em; margin-top: 14px">
+            Tu carro, con la foto real, en la primera pantalla.
+          </h2>
+        </div>
+        <div class="phone">
+          <div class="phone-hero" aria-hidden="true">
+            <div class="photo">
+              <img src="../public/images/fleet-car.webp" alt="" />
+              <span class="grade"></span><span class="light"></span><span class="grain"></span>
+            </div>
+          </div>
+          <div class="phone-head"><span>9:41</span><span>Flota Norte</span></div>
+          <div class="phone-body">
+            <p class="phone-title">Buenos días,<br /><span>Luis</span></p>
+            <div class="phone-cards">
+              <div class="pcard"><span>Este mes<em class="mini">combustible + servicios</em></span><b>$248,60</b></div>
+              <div class="pcard"><span>Próximo servicio<em class="mini">Toyota Corolla · ABC-123</em></span><b>480 km</b></div>
+              <div class="pcard"><span>Documentos<em class="mini">1 por vencer</em></span><b>12 nov</b></div>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="Navegación principal">
+            <span class="tab on"><i></i>Inicio</span>
+            <span class="tab"><i></i>Flota</span>
+            <button class="fab" aria-label="Registrar">+</button>
+            <span class="tab"><i></i>Gastos</span>
+            <span class="tab"><i></i>Cuenta</span>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <footer class="wrap">
+      Propuesta visual «Señal» · fotos reales de <code>public/images</code> con un único grade · medidas listas para Tailwind v4.
+    </footer>
+
+    <script>
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const el = document.querySelector('[data-count]');
+      const target = Number(el.dataset.count);
+      const unit = el.querySelector('small').outerHTML;
+      const fmt = new Intl.NumberFormat('es-VE');
+
+      if (reduce) {
+        el.innerHTML = fmt.format(target) + unit;
+      } else {
+        const t0 = performance.now();
+        const tick = (t) => {
+          const p = Math.min(1, (t - t0) / 900);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.innerHTML = fmt.format(Math.round(target * eased)) + unit;
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
+      // Inclinación 1:1 con el puntero.
+      const dash = document.getElementById('dash');
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches && !reduce) {
+        dash.addEventListener('pointermove', (e) => {
+          const r = dash.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          dash.style.transform = `perspective(1200px) rotateX(${3 - y * 5}deg) rotateY(${-5 + x * 7}deg)`;
+        });
+        dash.addEventListener('pointerleave', () => {
+          dash.style.transform = 'perspective(1200px) rotateX(3deg) rotateY(-5deg)';
+        });
+      }
+    </script>
+  </body>
+</html>

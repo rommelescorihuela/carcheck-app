@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/types'
+import AuthShell from '../components/AuthShell'
 import { useAuth } from '../stores/auth'
 
 export default function Login() {
@@ -35,7 +36,8 @@ export default function Login() {
   }
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-6 p-6">
+    <AuthShell>
+      <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold text-slate-900">Iniciar sesión</h1>
 
       {message && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{message}</p>}
@@ -84,6 +86,7 @@ export default function Login() {
           Crear una
         </Link>
       </p>
-    </main>
+    </div>
+    </AuthShell>
   )
 }

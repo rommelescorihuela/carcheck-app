@@ -257,7 +257,179 @@
 
 .lp-hero {
   position: relative;
-  padding: clamp(40px, 5vw, 68px) 0 clamp(30px, 4vw, 44px);
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(44px, 5.4vw, 76px) 0 clamp(30px, 4vw, 44px);
+  background: var(--ink-deep);
+  color: var(--paper);
+}
+
+/* Foto a sangre de la mitad derecha. Mismo grade que el resto del producto. */
+.lp-hero-bg {
+  position: absolute;
+  inset: 0 0 0 34%;
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, rgb(0 0 0 / 0.55) 26%, #000 54%);
+  mask-image: linear-gradient(to right, transparent 0, rgb(0 0 0 / 0.55) 26%, #000 54%);
+}
+
+.lp-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 46%;
+  filter: grayscale(1) contrast(1.05) brightness(1);
+}
+
+.lp-photo-grade {
+  position: absolute;
+  inset: 0;
+  background: #123a5a;
+  mix-blend-mode: color;
+  opacity: 0.5;
+}
+
+.lp-photo-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 84% 8%, rgb(255 108 58 / 0.5), transparent 58%);
+  mix-blend-mode: screen;
+}
+
+.lp-photo-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* Refuerzo de tinta en el borde: la foto no corta en seco. */
+.lp-hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(to right, var(--ink-deep) 0%, rgb(8 15 22 / 0.55) 18%, transparent 46%);
+}
+
+/* Aurora cálida detrás del titular. */
+.lp-hero::before {
+  content: "";
+  position: absolute;
+  inset: -30% 55% 20% -20%;
+  z-index: -2;
+  background:
+    radial-gradient(50% 50% at 70% 30%, rgb(192 58 43 / 0.28), transparent 70%),
+    radial-gradient(45% 45% at 30% 10%, rgb(29 74 112 / 0.55), transparent 72%);
+  filter: blur(26px) saturate(120%);
+}
+
+.lp-hero h1,
+.lp-hero h1 .lp-serif {
+  color: var(--paper);
+}
+
+.lp-hero .lp-eyebrow {
+  color: var(--brand-light);
+}
+
+.lp-hero .lp-lede {
+  color: rgb(246 247 248 / 0.72);
+}
+
+.lp-hero .lp-hero-note {
+  color: rgb(246 247 248 / 0.48);
+}
+
+/* El único degradado del sistema: aquí marca la promesa del titular.
+   Es texto grande sobre tinta, así que puede usar la versión brillante. */
+.lp-hero h1 .lp-serif {
+  background: var(--grad-glow);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lp-hero .lp-btn-primary {
+  background: var(--grad-signal);
+  box-shadow:
+    0 18px 38px -18px rgb(255 90 60 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.3);
+}
+
+.lp-hero .lp-btn-ghost {
+  border-color: rgb(246 247 248 / 0.24);
+  background: rgb(8 19 29 / 0.32);
+  color: var(--paper);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lp-hero .lp-btn-ghost:hover {
+    border-color: rgb(246 247 248 / 0.6);
+    background: rgb(246 247 248 / 0.1);
+  }
+
+  .lp-hero .lp-btn-primary:hover {
+    background: var(--grad-signal);
+    filter: saturate(1.1) brightness(1.04);
+  }
+}
+
+.lp-hero .lp-hero-foot {
+  border-top-color: rgb(246 247 248 / 0.14);
+}
+
+.lp-hero .lp-stat-value {
+  color: var(--paper);
+}
+
+.lp-hero .lp-stat-label {
+  color: rgb(246 247 248 / 0.55);
+}
+
+/* Tarjetas flotantes del hero: material oscuro, no tarjetas blancas pegadas. */
+.lp-hero .lp-float-card {
+  background: rgb(12 29 42 / 0.62);
+  border-color: rgb(255 255 255 / 0.16);
+  color: var(--paper);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    0 30px 60px -30px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.16);
+}
+
+.lp-hero .lp-float-icon {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--brand-light);
+}
+
+.lp-hero .lp-float-eyebrow {
+  color: rgb(246 247 248 / 0.58);
+}
+
+.lp-hero .lp-float-title {
+  color: var(--paper);
+}
+
+.lp-hero .lp-float-sub {
+  color: rgb(246 247 248 / 0.55);
+}
+
+.lp-hero .lp-float-badge {
+  background: rgb(255 176 58 / 0.16);
+  color: #ffd08a;
+}
+
+.lp-hero .lp-hero-stamp {
+  border-color: rgb(255 255 255 / 0.18);
+  background: rgb(12 29 42 / 0.55);
+  color: var(--paper);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
 }
 
 .lp-hero-inner {
@@ -341,31 +513,11 @@
   margin-right: calc((100vw - min(1180px, 100vw - 48px)) / -2);
 }
 
-.lp-hero-photo {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 22px 0 0 22px;
-  background: var(--paper-deep);
-  box-shadow: 0 40px 70px -55px rgb(17 27 37 / 0.85);
-}
-
-.lp-hero-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 52% 50%;
-  transform: scale(1.02);
-}
-
-.lp-hero-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgb(17 27 37 / 0.12);
-  background: linear-gradient(to top, rgb(13 20 28 / 0.4), transparent 46%);
-  pointer-events: none;
+/* Fotos sobre papel: mismo criterio, menos intensidad (no deben parecer un cartel).
+   Solo filtro: estas imágenes conviven con texto y no admiten una capa encima. */
+.lp-how-photo img,
+.lp-fleet > img {
+  filter: saturate(0.86) contrast(1.05);
 }
 
 .lp-hero-stamp {
@@ -1439,13 +1591,20 @@
 
   .lp-hero-visual {
     height: auto;
+    min-height: 260px;
     margin-inline: calc((100vw - 100%) / -2);
   }
 
-  .lp-hero-photo {
-    height: auto;
-    aspect-ratio: 16 / 11;
-    border-radius: 0;
+  /* En móvil la foto pasa a ocupar la mitad inferior del hero: el texto queda sobre tinta. */
+  .lp-hero-bg {
+    inset: 50% 0 0;
+    opacity: 0.9;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 24%);
+  }
+
+  .lp-hero-bg::after {
+    display: none;
   }
 
   .lp-hero-stamp {

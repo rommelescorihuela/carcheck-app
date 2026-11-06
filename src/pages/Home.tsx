@@ -176,6 +176,21 @@ export default function Home() {
 
       <main id="contenido">
         <section className="lp-hero">
+          {/* Foto real a sangre, con el grade único del sistema: sombras azul tinta,
+              luz cálida y grano. Se funde hacia la tinta por la izquierda. */}
+          <div className="lp-hero-bg" aria-hidden="true">
+            <img
+              src="/images/hero-driving.webp"
+              alt=""
+              width={1200}
+              height={1500}
+              fetchPriority="high"
+            />
+            <span className="lp-photo-grade" />
+            <span className="lp-photo-light" />
+            <span className="lp-photo-grain" />
+          </div>
+
           <div className="lp-shell lp-hero-inner">
             <div className="lp-hero-copy">
               <p className="lp-eyebrow">Mantenimiento de vehículos</p>
@@ -201,15 +216,6 @@ export default function Home() {
             </div>
 
             <div className="lp-hero-visual">
-              <div className="lp-hero-photo">
-                <img
-                  src="/images/hero-driving.webp"
-                  alt="Persona conduciendo un auto al atardecer"
-                  width={1200}
-                  height={1500}
-                  fetchPriority="high"
-                />
-              </div>
               <span className="lp-hero-stamp">
                 <span className="lp-dot" aria-hidden="true" />
                 Al día
