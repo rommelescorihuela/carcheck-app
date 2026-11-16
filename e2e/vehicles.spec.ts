@@ -12,6 +12,7 @@ async function register(page: Page, name: string, email: string): Promise<void> 
   await page.getByLabel('Correo').fill(email)
   await page.getByLabel('Contraseña', { exact: true }).fill(password)
   await page.getByLabel('Repite la contraseña').fill(password)
+  await page.getByRole('checkbox').check()
   await page.getByRole('button', { name: 'Crear cuenta' }).click()
   await expect(page).toHaveURL(/\/organizaciones$/)
 }
