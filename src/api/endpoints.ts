@@ -42,6 +42,7 @@ export interface RegisterPayload {
   password: string
   password_confirmation: string
   currency?: string
+  terms: boolean
 }
 
 export interface LoginPayload {
@@ -87,6 +88,45 @@ export async function me(): Promise<User> {
   return data.user
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  await request('/forgot-password', { method: 'POST', body: { email }, auth: false })
+}
+
+export interface ResetPasswordPayload {
+  token: string
+  email: string
+  password: string
+  password_confirmation: string
+}
+
+export async function resetPassword(payload: ResetPasswordPayload): Promise<void> {
+  await request('/reset-password', { method: 'POST', body: payload, auth: false })
+}
+
+export interface ProfilePayload {
+  name?: string
+  email?: string
+  currency?: string
+}
+
+export async function updateProfile(payload: ProfilePayload): Promise<User> {
+  const data = await request<{ user: User }>('/user', { method: 'PATCH', body: payload })
+
+  return data.user
+}
+
+export async function updatePassword(payload: {
+  current_password: string
+  password: string
+  password_confirmation: string
+}): Promise<void> {
+  await request('/user/password', { method: 'PUT', body: payload })
+}
+
+export async function deleteAccount(password: string): Promise<void> {
+  await request('/account', { method: 'DELETE', body: { password } })
+}
+
 export async function listOrganizations(): Promise<Organization[]> {
   const data = await request<{ organizations: Organization[] }>('/organizations')
 
@@ -100,6 +140,38 @@ export async function createOrganization(payload: { name: string }): Promise<Org
   })
 
   return data.organization
+}
+
+export async function updateOrganization(
+  organizationId: number,
+  payload: { name?: string; currency?: string; timezone?: string },
+): Promise<Organization> {
+  const data = await request<{ organization: Organization }>(`/organizations/${organizationId}`, {
+    method: 'PATCH',
+    body: payload,
+  })
+
+  return data.organization
+}
+
+export async function deleteOrganization(organizationId: number): Promise<void> {
+  await request(`/organizations/${organizationId}`, { method: 'DELETE' })
+}
+
+export async function transferOrganization(
+  organizationId: number,
+  userId: number,
+): Promise<Organization> {
+  const data = await request<{ organization: Organization }>(
+    `/organizations/${organizationId}/transfer`,
+    { method: 'POST', body: { user_id: userId } },
+  )
+
+  return data.organization
+}
+
+export async function leaveOrganization(organizationId: number): Promise<void> {
+  await request(`/organizations/${organizationId}/leave`, { method: 'DELETE' })
 }
 
 export async function listMembers(organizationId: number): Promise<Member[]> {

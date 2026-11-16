@@ -12,6 +12,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [terms, setTerms] = useState(false)
   const [errors, setErrors] = useState<Record<string, string[]>>({})
   const [message, setMessage] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -28,6 +29,7 @@ export default function Register() {
         email,
         password,
         password_confirmation: passwordConfirmation,
+        terms,
       })
       navigate('/organizaciones')
     } catch (error) {
@@ -102,6 +104,28 @@ export default function Register() {
             required
           />
         </label>
+
+        <label className="flex items-start gap-3 rounded border border-slate-200 bg-white p-3">
+          <input
+            type="checkbox"
+            checked={terms}
+            onChange={(event) => setTerms(event.target.checked)}
+            className="mt-1"
+            required
+          />
+          <span className="text-sm text-slate-600">
+            Acepto los{' '}
+            <Link to="/terminos" className="font-medium text-brand-700" target="_blank">
+              términos y condiciones
+            </Link>{' '}
+            y la{' '}
+            <Link to="/privacidad" className="font-medium text-brand-700" target="_blank">
+              política de privacidad
+            </Link>
+            .
+          </span>
+        </label>
+        {errors.terms?.[0] && <span className="text-sm text-red-600">{errors.terms[0]}</span>}
 
         <button
           type="submit"

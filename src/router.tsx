@@ -3,9 +3,11 @@ import AppShell from './components/AppShell'
 import ProtectedRoute from './components/ProtectedRoute'
 import RootLayout from './components/RootLayout'
 import AcceptInvitation from './pages/AcceptInvitation'
+import Account from './pages/Account'
 import Billing from './pages/Billing'
 import DocumentsList from './pages/DocumentsList'
 import Fleet from './pages/Fleet'
+import ForgotPassword from './pages/ForgotPassword'
 import FuelList from './pages/FuelList'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -15,9 +17,12 @@ import Notifications from './pages/Notifications'
 import NotFound from './pages/NotFound'
 import OrganizationMembers from './pages/OrganizationMembers'
 import Organizations from './pages/Organizations'
+import Privacy from './pages/Privacy'
 import Register from './pages/Register'
 import Reminders from './pages/Reminders'
 import Reports from './pages/Reports'
+import ResetPassword from './pages/ResetPassword'
+import Terms from './pages/Terms'
 import VehicleDetail from './pages/VehicleDetail'
 import Vehicles from './pages/Vehicles'
 
@@ -29,6 +34,10 @@ export const routes: RouteObject[] = [
       { path: '/', element: <Home /> },
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
+      { path: '/recuperar', element: <ForgotPassword /> },
+      { path: '/restablecer/:token', element: <ResetPassword /> },
+      { path: '/terminos', element: <Terms /> },
+      { path: '/privacidad', element: <Privacy /> },
       {
         element: <ProtectedRoute />,
         children: [
@@ -36,6 +45,7 @@ export const routes: RouteObject[] = [
           {
             element: <AppShell />,
             children: [
+              { path: '/cuenta', element: <Account /> },
               { path: '/organizaciones', element: <Organizations /> },
               { path: '/organizaciones/:id', element: <OrganizationMembers /> },
               { path: '/flota', element: <Fleet /> },

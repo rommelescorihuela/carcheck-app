@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as api from '../api/endpoints'
 import { ApiError, type Member, type OrganizationRole } from '../api/types'
 import { useAuth } from '../stores/auth'
@@ -8,6 +8,7 @@ import { roleLabels } from '../lib/roles'
 
 export default function OrganizationMembers() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const organizationId = Number(id)
 
   const organizations = useOrganizations((state) => state.organizations)
@@ -22,6 +23,13 @@ export default function OrganizationMembers() {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const [name, setName] = useState(organization?.name ?? '')
+  const [nameMessage, setNameMessage] = useState<string | null>(null)
+  const [savingName, setSavingName] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [actionMessage, setActionMessage] = useState<string | null>(null)
 
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<'admin' | 'member' | 'driver'>('member')
@@ -53,6 +61,12 @@ export default function OrganizationMembers() {
       void refresh()
     }
   }, [organizationId, refresh])
+
+  useEffect(() => {
+    if (organization) {
+      setName(organization.name)
+    }
+  }, [organizationId, organization?.name])
 
   async function changeRole(member: Member, role: 'admin' | 'member' | 'driver') {
     try {
@@ -90,6 +104,72 @@ export default function OrganizationMembers() {
     }
   }
 
+  async function rename(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setSavingName(true)
+    setNameMessage(null)
+
+    try {
+      const updated = await api.updateOrganization(organizationId, { name })
+      setName(updated.name)
+      await loadOrganizations()
+      setNameMessage('Nombre actualizado.')
+    } catch (exception) {
+      setNameMessage(
+        exception instanceof ApiError ? exception.message : 'No se pudo renombrar la organización.',
+      )
+    } finally {
+      setSavingName(false)
+    }
+  }
+
+  async function transfer(member: Member) {
+    setActionMessage(null)
+
+    try {
+      await api.transferOrganization(organizationId, member.id)
+      await loadOrganizations()
+      await refresh()
+      setActionMessage(`${member.name} es ahora el propietario.`)
+    } catch (exception) {
+      setActionMessage(
+        exception instanceof ApiError ? exception.message : 'No se pudo transferir la propiedad.',
+      )
+    }
+  }
+
+  async function removeOrganization() {
+    setDeleting(true)
+    setActionMessage(null)
+
+    try {
+      await api.deleteOrganization(organizationId)
+      await loadOrganizations()
+      navigate('/organizaciones')
+    } catch (exception) {
+      setActionMessage(
+        exception instanceof ApiError ? exception.message : 'No se pudo eliminar la organización.',
+      )
+      setDeleting(false)
+    }
+  }
+
+  async function leave() {
+    setDeleting(true)
+    setActionMessage(null)
+
+    try {
+      await api.leaveOrganization(organizationId)
+      await loadOrganizations()
+      navigate('/organizaciones')
+    } catch (exception) {
+      setActionMessage(
+        exception instanceof ApiError ? exception.message : 'No se pudo salir de la organización.',
+      )
+      setDeleting(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,7 +182,34 @@ export default function OrganizationMembers() {
       </div>
 
       {error && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+      {actionMessage && (
+        <p className="rounded bg-slate-50 p-3 text-sm text-slate-700">{actionMessage}</p>
+      )}
       {loading && <p className="text-sm text-slate-500">Cargando…</p>}
+
+      {canManage && (
+        <section className="space-y-3 rounded border border-slate-200 bg-white p-4">
+          <h2 className="text-lg font-semibold text-slate-800">Nombre de la organización</h2>
+          {nameMessage && <p className="text-sm text-slate-600">{nameMessage}</p>}
+          <form onSubmit={rename} className="flex flex-wrap gap-2" noValidate>
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              aria-label="Nombre de la organización"
+              className="min-w-0 flex-1 basis-full rounded border border-slate-300 px-3 py-2 sm:basis-0"
+              required
+            />
+            <button
+              type="submit"
+              disabled={savingName}
+              className="rounded bg-brand-700 px-4 py-2 font-medium text-white disabled:opacity-60"
+            >
+              {savingName ? 'Guardando…' : 'Guardar nombre'}
+            </button>
+          </form>
+        </section>
+      )}
 
       <ul className="space-y-2">
         {members.map((member) => (
@@ -151,6 +258,15 @@ export default function OrganizationMembers() {
                       className="text-sm text-red-600"
                     >
                       Quitar
+                    </button>
+                  )}
+                  {isOwner && (
+                    <button
+                      type="button"
+                      onClick={() => void transfer(member)}
+                      className="text-sm font-medium text-brand-700"
+                    >
+                      Hacer propietario
                     </button>
                   )}
                 </>
@@ -202,6 +318,62 @@ export default function OrganizationMembers() {
               {inviting ? 'Enviando…' : 'Invitar'}
             </button>
           </form>
+        </section>
+      )}
+
+      {myRole && myRole !== 'owner' && (
+        <section className="space-y-3 rounded border border-slate-200 bg-white p-4">
+          <h2 className="text-lg font-semibold text-slate-800">Salir de la organización</h2>
+          <p className="text-sm text-slate-600">
+            Dejarás de ver los vehículos y registros compartidos. Podrás volver si te invitan de
+            nuevo.
+          </p>
+          <button
+            type="button"
+            onClick={() => void leave()}
+            disabled={deleting}
+            className="rounded border border-slate-300 px-4 py-2 font-medium text-slate-700 disabled:opacity-60"
+          >
+            {deleting ? 'Saliendo…' : 'Salir de la organización'}
+          </button>
+        </section>
+      )}
+
+      {isOwner && (
+        <section className="space-y-3 rounded border border-red-200 bg-white p-4">
+          <h2 className="text-lg font-semibold text-red-700">Eliminar organización</h2>
+          <p className="text-sm text-slate-600">
+            Se eliminarán la organización y sus vehículos compartidos. El historial de pagos se
+            conserva por facturación. Esta acción no se puede deshacer.
+          </p>
+
+          {confirmDelete ? (
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => void removeOrganization()}
+                disabled={deleting}
+                className="rounded bg-red-600 px-4 py-2 font-medium text-white disabled:opacity-60"
+              >
+                {deleting ? 'Eliminando…' : 'Sí, eliminar organización'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(false)}
+                className="rounded border border-slate-300 px-4 py-2 font-medium text-slate-700"
+              >
+                Cancelar
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(true)}
+              className="rounded border border-red-300 px-4 py-2 font-medium text-red-700"
+            >
+              Eliminar organización
+            </button>
+          )}
         </section>
       )}
     </div>

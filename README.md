@@ -99,6 +99,9 @@ se recuerda al recargar y se reinicia al cerrar sesión.
 - **Reportes**: gastos por vehículo y mes, con exportación CSV autenticada.
 - **Flotas**: consolidado por rango de fechas, tarjetas en móvil y tabla en escritorio.
 - **Importación CSV**: validación por fila, resumen de creados/omitidos y respeto del límite del plan.
+- **Cuenta**: perfil (nombre, correo, moneda), cambio de contraseña, recuperación por correo y baja de cuenta.
+- **Organizaciones**: miembros, roles, invitaciones, renombrar, transferir propiedad, salir y eliminar.
+- **Legal**: términos y privacidad, con aceptación obligatoria en el registro.
 
 ## Stack
 
@@ -165,7 +168,10 @@ npm run typecheck && npm run test && npm run build
 ```text
 /                                  Landing pública
 /login · /register                 Acceso
+/recuperar · /restablecer/:token   Recuperación de contraseña
+/terminos · /privacidad            Legal
 /invitaciones/:token               Aceptar invitación (requiere sesión)
+/cuenta                            Perfil, contraseña y baja de cuenta
 /organizaciones                    Selector de ámbito personal u organización
 /organizaciones/:id                Miembros, roles e invitaciones
 /flota                             Consolidado de la flota
@@ -301,7 +307,8 @@ La guía de producción completa, con Nginx y variables del backend, está en
 - Los datos **no se cachean para uso offline**: la PWA se instala y arranca, pero necesita red para
   leer o escribir.
 - El pago es manual (comprobante + aprobación), no hay pasarela en la app.
-- El push requiere HTTPS, permiso del usuario y claves VAPID configuradas en el backend.
+- El push requiere HTTPS, permiso del usuario y claves VAPID configuradas en el backend. En iOS
+  solo funciona con la PWA instalada en la pantalla de inicio (iOS 16.4 o superior).
 - El E2E no corre en CI porque necesita PostgreSQL y el backend levantado.
 - El build apunta a `VITE_API_URL`; un `dist/` con el placeholder de ejemplo no autentica contra
   una API real hasta que edites `config.js` en el servidor (o rebuild con tu dominio).

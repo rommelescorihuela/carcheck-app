@@ -789,6 +789,8 @@ export default function Home() {
             ) : (
               <Link to="/login">Iniciar sesión</Link>
             )}
+            <Link to="/terminos">Términos</Link>
+            <Link to="/privacidad">Privacidad</Link>
           </nav>
         </div>
       </footer>

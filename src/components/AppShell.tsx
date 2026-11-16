@@ -29,7 +29,7 @@ const TABS = [
   { to: '/flota', label: 'Flota', icon: 'M4 7h7v10H4zM13 5h7v7h-7zM13 14h7v5h-7z' },
   { to: '/reportes', label: 'Gastos', icon: 'M4 19V5M4 19h16M8 16V11M12 16V7M16 16v-3' },
   { to: '/recordatorios', label: 'Avisos', icon: 'M12 4a5 5 0 0 0-5 5v4l-2 3h14l-2-3V9a5 5 0 0 0-5-5zM10 19a2 2 0 0 0 4 0' },
-  { to: '/organizaciones', label: 'Cuenta', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 20a7 7 0 0 1 14 0' },
+  { to: '/cuenta', label: 'Cuenta', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 20a7 7 0 0 1 14 0' },
 ]
 
 export default function AppShell() {
@@ -62,6 +62,7 @@ export default function AppShell() {
           <nav aria-label="Principal" className="order-2 hidden md:block">
             <div className="flex items-center gap-4">
               {[
+                ['/cuenta', 'Mi cuenta'],
                 ['/organizaciones', 'Organizaciones'],
                 ['/flota', 'Flota'],
                 ['/vehiculos', 'Vehículos'],
@@ -104,7 +105,9 @@ export default function AppShell() {
             <span className="hidden rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-800 sm:inline">
               {active ? active.name : 'Personal'}
             </span>
-            <span className="hidden text-slate-500 sm:inline">{user?.name}</span>
+            <Link to="/cuenta" className="hidden text-slate-500 sm:inline">
+              {user?.name}
+            </Link>
             <button
               type="button"
               onClick={() => void logout()}

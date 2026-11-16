@@ -71,6 +71,12 @@ export default function Login() {
           )}
         </label>
 
+        <div className="text-right">
+          <Link to="/recuperar" className="text-sm font-medium text-brand-700">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </div>
+
         <button
           type="submit"
           disabled={submitting}
