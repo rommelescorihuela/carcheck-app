@@ -1,0 +1,11 @@
+# La raíz del repositorio NO es el docroot.
+# El docroot correcto es `dist/` (el build de Vite).
+# Esta regla evita que se sirvan `.git`, `src/`, `node_modules/`, `package.json`
+# o el `index.html` de desarrollo si el repo se publica por error en `public_html`.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
